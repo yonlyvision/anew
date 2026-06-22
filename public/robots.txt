@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /discover
+Disallow: /likes
+Disallow: /matches
+Disallow: /messages
+Disallow: /settings
+Disallow: /onboarding
+Disallow: /verification
+Disallow: /admin
+
+Sitemap: /sitemap.xml
