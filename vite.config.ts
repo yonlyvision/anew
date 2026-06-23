@@ -11,5 +11,8 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+    // Lovable's sandbox forces nitro to "cloudflare-module" regardless of this setting,
+    // so this only takes effect for builds outside the Lovable editor (e.g. Vercel CI).
+    nitro: { preset: "vercel" },
   },
 });
