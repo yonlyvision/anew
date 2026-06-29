@@ -1,7 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { getStaffStatus } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({ meta: [{ title: "Welcome — Anew" }, { name: "robots", content: "noindex" }] }),
@@ -92,6 +95,17 @@ const goalOptions = [
 function OnboardingPage() {
   const { userId } = Route.useRouteContext();
   const navigate = useNavigate();
+  const staffFn = useServerFn(getStaffStatus);
+  // Staff (admins/moderators) don't need a full dating profile — give them a
+  // short two-step setup (basics + location) and drop them straight on the
+  // dashboard, skipping voice/intent/story and the verification redirect.
+  const { data: staff } = useQuery({
+    queryKey: ["me", "staff"],
+    queryFn: () => staffFn(),
+    staleTime: 60_000,
+  });
+  const isStaff = staff?.isStaff ?? false;
+  const steps = useMemo(() => (isStaff ? STEPS.slice(0, 2) : STEPS), [isStaff]);
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,7 +156,12 @@ function OnboardingPage() {
   const interests = useMemo(() => splitList(form.interests), [form.interests]);
   const values = useMemo(() => splitList(form.values), [form.values]);
   const completion = Math.round((fieldsFilled(form) / 8) * 100);
-  const currentStep = STEPS[step];
+  // If the step list shrinks (staff status resolves), keep the cursor in range.
+  useEffect(() => {
+    setStep((current) => Math.min(current, steps.length - 1));
+  }, [steps.length]);
+  const currentStep = steps[step];
+  const isLastStep = step === steps.length - 1;
 
   function update<K extends keyof Form>(key: K, value: Form[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -182,10 +201,10 @@ function OnboardingPage() {
       return;
     }
     if (finish) {
-      navigate({ to: "/verification", replace: true });
+      navigate({ to: isStaff ? "/dashboard" : "/verification", replace: true });
       return;
     }
-    setStep((current) => Math.min(current + 1, STEPS.length - 1));
+    setStep((current) => Math.min(current + 1, steps.length - 1));
   }
 
   return (
@@ -199,15 +218,16 @@ function OnboardingPage() {
             Let&apos;s make this feel like you.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-ink/62">
-            Each step saves your progress. Finish your story first, then we will
-            guide you into verification so trust is in place before discovery.
+            {isStaff
+              ? "Just the essentials for a staff account — add your basics and location, then head straight to the dashboard."
+              : "Each step saves your progress. Finish your story first, then we will guide you into verification so trust is in place before discovery."}
           </p>
 
           <div className="mt-8 rounded-[2rem] border border-ink/8 bg-card/88 p-6 shadow-[0_24px_70px_-56px_rgba(35,25,22,0.45)] md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
-                  Step {step + 1} of {STEPS.length}
+                  Step {step + 1} of {steps.length}
                 </p>
                 <h2 className="mt-3 font-serif text-4xl leading-tight">
                   {currentStep.title}
@@ -230,8 +250,8 @@ function OnboardingPage() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-2 md:grid-cols-5">
-              {STEPS.map((item, index) => {
+            <div className={`mt-8 grid gap-2 ${steps.length <= 2 ? "md:grid-cols-2" : "md:grid-cols-5"}`}>
+              {steps.map((item, index) => {
                 const active = index === step;
                 const done = index < step;
                 return (
@@ -418,13 +438,15 @@ function OnboardingPage() {
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={() => save(step === STEPS.length - 1)}
+                  onClick={() => save(isLastStep)}
                   className="rounded-full bg-ink px-7 py-3 text-[11px] uppercase tracking-[0.28em] text-paper transition-colors hover:bg-accent disabled:opacity-60"
                 >
                   {saving
                     ? "Saving…"
-                    : step === STEPS.length - 1
-                    ? "Finish & verify"
+                    : isLastStep
+                    ? isStaff
+                      ? "Finish & go to dashboard"
+                      : "Finish & verify"
                     : "Save & continue"}
                 </button>
               </div>
