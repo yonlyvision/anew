@@ -76,8 +76,10 @@ function AdminApplications() {
       <span className="text-[11px] uppercase tracking-[0.3em] text-accent italic">Admin</span>
       <h1 className="mt-3 font-serif text-4xl md:text-5xl">Applications</h1>
       <p className="mt-4 text-ink/60">
-        {pending.length} pending · approving an email lets that person create their
-        real account at /auth — tell them yourself once you've decided.
+        {pending.length} pending · approving an email lets that person create their account at{" "}
+        <code className="rounded bg-ink/5 px-1.5 py-0.5 text-xs">/auth?mode=signup</code>. Send
+        them that link once you approve — automated approval emails are not set up yet (client task
+        before launch).
       </p>
 
       <div className="mt-12 space-y-6">

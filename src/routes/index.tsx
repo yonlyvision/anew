@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A private dating community designed for people entering a new chapter with more honesty, care, and intention.",
+          "A private dating community for people rebuilding after a hard season — and for partners open to meeting them as they are now.",
       },
     ],
   }),
@@ -30,15 +30,15 @@ const trustSignals = [
     copy: "Your story stays yours until you choose to share it.",
   },
   {
-    title: "Human moderation",
-    copy: "A calmer space with real review, not just automation.",
+    title: "Reviewed by people",
+    copy: "Reports are read by a real person, not just an automated filter.",
   },
 ];
 
 const communityFaces = [
-  { imageSrc: alexHero, name: "Alex" },
-  { imageSrc: mayaHero, name: "Maya" },
-  { imageSrc: marcusCommunity, name: "Marcus" },
+  { imageSrc: alexHero, name: "Marcus" },
+  { imageSrc: mayaHero, name: "Nadia" },
+  { imageSrc: marcusCommunity, name: "David" },
   { imageSrc: meiCommunity, name: "Mei" },
 ];
 
@@ -47,7 +47,7 @@ const flowSteps = [
     eyebrow: "1. Apply",
     title: "Start with who you are now",
     copy:
-      "A thoughtful application, not a swipe tunnel. We ask for intent, values, and what this chapter means to you.",
+      "A short application — not a swipe tunnel. We ask who you are, what you want, and why you're here.",
   },
   {
     eyebrow: "2. Verify",
@@ -69,29 +69,20 @@ const flowSteps = [
   },
 ];
 
-const promiseCards = [
-  {
-    title: "Intent over volume",
-    copy:
-      "The experience should reward readiness and reciprocity, not speed, chaos, or burnout.",
-  },
-  {
-    title: "Compatibility you can feel",
-    copy:
-      "Shared values, life rhythm, and relationship goals should be visible before someone ever says hello.",
-  },
-  {
-    title: "Safety without stiffness",
-    copy:
-      "Trust cues belong everywhere in the flow, but they should still feel warm, human, and attractive.",
-  },
+const forYou = [
+  "You're serious about dating — not collecting matches.",
+  "You value honesty over a flawless story.",
+  "You want privacy before exposure.",
+  "You're open-minded, but not careless.",
+  "You'd take fewer matches and better conversations.",
 ];
 
-const relationshipSignals = [
-  "Long-term goals on the surface",
-  "Prompt-led conversation starters",
-  "Values and interests people can actually react to",
-  "Visible verification and completion cues",
+const notForYou = [
+  "You're looking for hookups.",
+  "You hide major truths from people you date.",
+  "You ask people for money.",
+  "You're not ready to be accountable.",
+  "You expect people to overlook your past without earning their trust.",
 ];
 
 function HomePage() {
@@ -120,7 +111,7 @@ function HomePage() {
                 to="/apply"
                 className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent to-[#ea7d63] px-8 py-4 text-base font-semibold text-paper shadow-[0_18px_40px_-24px_rgba(229,98,84,0.9)] transition-transform duration-300 hover:-translate-y-0.5"
               >
-                Begin your journey
+                Apply to join
               </Link>
               <Link
                 to="/how-it-works"
@@ -144,9 +135,14 @@ function HomePage() {
                 </div>
               ))}
             </div>
+
+            {/* Single profile preview on tablet/mobile — the xl collage is desktop-only */}
+            <div className="mt-10 xl:hidden">
+              <MobileProfilePreview />
+            </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[40rem] xl:mx-0">
+          <div className="relative mx-auto hidden w-full max-w-[40rem] xl:mx-0 xl:block">
             <div className="absolute left-[3%] top-[8%] z-20 hidden rounded-full border border-ink/8 bg-paper/88 px-4 py-2 text-sm font-medium text-ink shadow-lg backdrop-blur md:inline-flex">
               <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-teal" />
               Verified
@@ -158,23 +154,23 @@ function HomePage() {
             <div className="relative min-h-[38rem]">
               <HeroMemberCard
                 className="left-0 top-2 z-10 w-[60%] rotate-[-3deg]"
-                name="Alex"
-                age="31"
-                role="Creative Director"
-                location="San Francisco, CA"
-                tags={["Travel", "Coffee", "Hiking"]}
+                name="Marcus"
+                age="34"
+                role="Five years out. Looking for something family-minded, at a slower pace."
+                location="Ottawa, ON"
+                tags={["Honesty", "Accountability", "Faith"]}
                 imageSrc={alexHero}
-                imageAlt="Alex profile portrait"
+                imageAlt="Marcus profile portrait"
               />
               <HeroMemberCard
                 className="right-0 top-24 z-20 w-[57%] rotate-[4deg]"
-                name="Maya"
-                age="29"
-                role="Marketing Lead"
-                location="Austin, TX"
-                tags={["Foodie", "Yoga", "Books"]}
+                name="Nadia"
+                age="31"
+                role="Looking for something serious"
+                location="Montreal, QC"
+                tags={["Loyalty", "Humour", "Emotional safety"]}
                 imageSrc={mayaHero}
-                imageAlt="Maya profile portrait"
+                imageAlt="Nadia profile portrait"
               />
 
               <div className="absolute left-[47%] top-[54%] z-30 flex h-36 w-36 -translate-x-1/2 items-center justify-center rounded-full border border-accent/22 bg-paper/90 text-center shadow-[0_22px_50px_-28px_rgba(229,98,84,0.55)] backdrop-blur">
@@ -196,9 +192,9 @@ function HomePage() {
       <section className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-16">
         <div className="rounded-[2rem] border border-ink/8 bg-card/86 p-8 shadow-[0_28px_80px_-54px_rgba(33,24,20,0.35)] md:p-10">
           <SectionHeading
-            eyebrow="What Makes This Flow Better"
-            title="Trust first. Self-expression second. Compatibility before conversation."
-            intro="That order matters. It reduces anxiety, lowers bad-fit interactions, and makes the first meaningful match feel earned instead of random."
+            eyebrow="How it works"
+            title="Apply. Verify. Meet someone worth the wait."
+            intro="We put trust before chemistry — so your first conversation starts on solid ground, not a guess."
           />
           <div className="mt-10 grid gap-6 lg:grid-cols-4">
             {flowSteps.map((step) => (
@@ -218,56 +214,37 @@ function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-18">
-        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] xl:items-center">
-          <div>
-            <SectionHeading
-              eyebrow="Inside The Experience"
-              title="A calmer dating product should still feel magnetic."
-              intro="The strongest experience for this brand is not just safer. It is more emotionally legible. People should quickly understand who belongs here, why a match fits, and what to say next."
-            />
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {promiseCards.map((card) => (
-                <div
-                  key={card.title}
-                  className="rounded-[1.6rem] border border-ink/8 bg-paper px-5 py-6"
-                >
-                  <h3 className="text-2xl leading-tight text-ink">{card.title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-ink/58">{card.copy}</p>
-                </div>
+        <SectionHeading
+          eyebrow="Who it's for"
+          title="Built for people who are done performing."
+          intro="We'd rather be the right fit for a few people than a vague fit for everyone. Here's who Anew is — and isn't — for."
+        />
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="rounded-[1.75rem] border border-accent/15 bg-paper px-6 py-7">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
+              This is for you if
+            </p>
+            <ul className="mt-5 space-y-3">
+              {forYou.map((line) => (
+                <li key={line} className="flex items-start gap-3 text-sm leading-6 text-ink/70">
+                  <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-accent" />
+                  {line}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-
-          <div className="rounded-[2rem] border border-ink/8 bg-gradient-to-br from-[#fff9f6] via-[#fffdfa] to-[#f7faf8] p-6 shadow-[0_24px_65px_-48px_rgba(34,24,20,0.45)] md:p-8">
-            <div className="rounded-[1.6rem] border border-white/70 bg-paper/88 p-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-teal">
-                Compatibility on the surface
-              </p>
-              <h3 className="mt-4 text-3xl leading-tight text-ink">
-                What a strong match should reveal immediately
-              </h3>
-              <div className="mt-6 space-y-3">
-                {relationshipSignals.map((signal) => (
-                  <div
-                    key={signal}
-                    className="flex items-start gap-3 rounded-2xl border border-ink/7 bg-white/85 px-4 py-3"
-                  >
-                    <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-accent" />
-                    <p className="text-sm leading-6 text-ink/62">{signal}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 rounded-2xl bg-ink px-5 py-5 text-paper">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-paper/55">
-                  Designed for momentum
-                </p>
-                <p className="mt-3 text-sm leading-7 text-paper/78">
-                  The best dating flow does not push people harder. It makes
-                  trust obvious, attraction clearer, and starting a conversation
-                  feel less risky.
-                </p>
-              </div>
-            </div>
+          <div className="rounded-[1.75rem] border border-ink/10 bg-muted-warm px-6 py-7">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ink/45">
+              This is not for you if
+            </p>
+            <ul className="mt-5 space-y-3">
+              {notForYou.map((line) => (
+                <li key={line} className="flex items-start gap-3 text-sm leading-6 text-ink/60">
+                  <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full bg-ink/25" />
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -277,7 +254,7 @@ function HomePage() {
           <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-center">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-paper/55">
-                Ready when you are
+                Join the founding group
               </p>
               <h2 className="mt-4 max-w-[12ch] font-serif text-5xl leading-[0.98] tracking-[-0.03em]">
                 Start with honesty. Let the rest follow.
@@ -285,10 +262,10 @@ function HomePage() {
             </div>
             <div>
               <p className="max-w-2xl text-base leading-8 text-paper/75">
-                The best version of this product is one where people feel
-                welcomed, protected, and genuinely curious about the next
-                conversation. That is the direction the experience is now set
-                up to support.
+                We're opening Anew to a small founding group first. Apply in about
+                a minute, and if it's a fit, you'll help shape a community where
+                people are met as who they are now — not the worst day of their
+                past.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link
@@ -330,6 +307,32 @@ function SectionHeading({
         {title}
       </h2>
       <p className="mt-5 text-base leading-8 text-ink/62">{intro}</p>
+    </div>
+  );
+}
+
+function MobileProfilePreview() {
+  return (
+    <div className="overflow-hidden rounded-[2rem] border border-ink/8 bg-paper shadow-[0_24px_60px_-40px_rgba(37,26,21,0.35)]">
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src={mayaHero}
+          alt="Nadia profile portrait"
+          className="h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-6 pb-6 pt-16">
+          <div className="inline-flex items-center gap-2 rounded-full bg-paper/90 px-3 py-1 text-xs font-medium text-ink">
+            <span className="inline-block h-2 w-2 rounded-full bg-teal" />
+            Photo verified
+          </div>
+          <h3 className="mt-3 font-serif text-3xl text-paper">Nadia, 31</h3>
+          <p className="mt-1 text-sm text-paper/85">Montreal, QC · Looking for something serious</p>
+          <p className="mt-3 text-sm leading-6 text-paper/80">
+            "I'm attracted to people who have lived, learned, and stopped pretending they
+            haven't."
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -417,11 +420,11 @@ function QuoteCard() {
         “
       </div>
       <p className="mt-5 font-serif text-2xl leading-[1.3] text-ink">
-        I did not come here to be fixed. I came to be seen for who I am becoming.
+        I didn't come here to be fixed. I came to be seen for who I am now.
       </p>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-ink/52">You belong here.</p>
+          <p className="text-sm font-medium text-ink/52">For people done performing.</p>
           <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/34">
             Across backgrounds and stories
           </p>
@@ -442,12 +445,12 @@ function MatchCard() {
           </div>
           <div>
             <p className="text-lg font-semibold text-accent">It&apos;s a match!</p>
-            <p className="text-sm text-ink/54">You and Maya liked each other.</p>
+            <p className="text-sm text-ink/54">You and Nadia liked each other.</p>
           </div>
         </div>
         <div className="flex -space-x-3">
-          <MiniAvatar imageSrc={alexHero} name="Alex" />
-          <MiniAvatar imageSrc={mayaHero} name="Maya" />
+          <MiniAvatar imageSrc={alexHero} name="Marcus" />
+          <MiniAvatar imageSrc={mayaHero} name="Nadia" />
         </div>
       </div>
     </div>

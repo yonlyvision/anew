@@ -13,7 +13,7 @@ export const Route = createFileRoute("/how-it-works")({
       { property: "og:title", content: "How Anew works" },
       {
         property: "og:description",
-        content: "From application to first conversation — the slow, intentional Anew process.",
+        content: "From application to first conversation — how Anew works step by step.",
       },
     ],
   }),
@@ -49,7 +49,7 @@ const steps = [
   {
     n: "06",
     t: "Message safely",
-    d: "Private, encrypted messaging with one-tap report, block, and unmatch. Safety reminders surface where they matter.",
+    d: "Private messaging, secured with encryption in transit and at rest, with one-tap report, block, and unmatch. Safety reminders surface where they matter.",
   },
   {
     n: "07",
@@ -62,9 +62,9 @@ function HowItWorks() {
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="The journey"
+        eyebrow="How it works"
         title={<>How Anew works.</>}
-        intro="A quieter, more intentional path to meeting someone. We focus on the people you become — not the speed at which you swipe."
+        intro="From application to first conversation — a slower, clearer path to meeting someone."
       />
       <section className="mx-auto max-w-5xl px-6 md:px-8 pb-32 space-y-16">
         {steps.map((s) => (

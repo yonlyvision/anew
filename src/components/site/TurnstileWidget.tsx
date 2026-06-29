@@ -36,8 +36,13 @@ export function TurnstileWidget({ onToken, className }: TurnstileWidgetProps) {
 
   useEffect(() => {
     if (!siteKey) {
-      onToken(DEV_BYPASS_TOKEN);
-      setStatus("fallback");
+      if (import.meta.env.DEV) {
+        onToken(DEV_BYPASS_TOKEN);
+        setStatus("fallback");
+      } else {
+        onToken(null);
+        setStatus("fallback");
+      }
       return;
     }
 
@@ -92,11 +97,28 @@ export function TurnstileWidget({ onToken, className }: TurnstileWidgetProps) {
   }, [onToken, scriptId, siteKey]);
 
   if (!siteKey) {
+    // No site key configured. In development we surface a small note so the
+    // local auth flow is testable; in production we render nothing so users
+    // never see environment/debug messaging.
+    if (import.meta.env.DEV) {
+      return (
+        <div className={className}>
+          <div className="rounded-[1.2rem] border border-ink/8 bg-muted-warm px-4 py-3 text-center text-xs leading-6 text-ink/58">
+            CAPTCHA is not configured in this environment (dev only). Local
+            access is enabled so the auth flow can still be tested.
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={className}>
-        <div className="rounded-[1.2rem] border border-ink/8 bg-muted-warm px-4 py-3 text-center text-xs leading-6 text-ink/58">
-          CAPTCHA is not configured in this environment. Local access is enabled
-          so the auth flow can still be tested.
+        <div className="rounded-[1.2rem] border border-destructive/20 bg-destructive/5 px-4 py-3 text-center text-xs leading-6 text-ink/70">
+          Security verification is not configured. Forms are temporarily unavailable.
+          Please email{" "}
+          <a href="mailto:support@inm8tebook.net" className="text-accent underline">
+            support@inm8tebook.net
+          </a>
+          .
         </div>
       </div>
     );

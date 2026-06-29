@@ -21,12 +21,12 @@ export const Route = createFileRoute("/community-values")({
 });
 
 const values = [
-  { t: "Honesty", d: "Be truthful about who you are and what you are looking for. Honesty is the foundation of every connection here." },
-  { t: "Respect", d: "No harassment, humiliation, judgement, or abuse. We hold each other to the standard of grown-up kindness." },
-  { t: "Accountability", d: "A second chance is not a free pass. It is the mature acceptance of who you were, who you are, and who you are becoming." },
-  { t: "Safety", d: "We protect each other from scams, harassment, and harmful behaviour — and we report it when we see it." },
-  { t: "Growth", d: "We support the people who are doing the hard, slow work of becoming better. Stronger. More stable." },
-  { t: "Real connection", d: "The goal is not the match. The goal is the person, the conversation, and the relationship that comes from both." },
+  { t: "Honesty", d: "Say who you are and what you want. No performance, no bait-and-switch." },
+  { t: "Respect", d: "No harassment, humiliation, or cruelty. Disagree like an adult." },
+  { t: "Accountability", d: "A second chance isn't a free pass. Own your past and your choices today." },
+  { t: "Safety", d: "Report scams, harassment, and pressure for money. We review reports by hand." },
+  { t: "Growth", d: "We show up for people doing the slow work of change — not people coasting on promises." },
+  { t: "Real connection", d: "The point isn't a match count. It's a real conversation with a real person." },
 ] as const;
 
 function Values() {

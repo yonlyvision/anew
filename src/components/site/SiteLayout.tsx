@@ -101,7 +101,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <p className="text-sm leading-relaxed text-paper/70">
                 A private community for people who believe in growth, honesty, and second chances.
               </p>
-              <p className="text-xs text-paper/40">Est. 2024 · Members 18+</p>
+              <p className="text-xs text-paper/40">
+                Founding community · Members 18+ · Part of the INM8TE Book family
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-10 md:grid-cols-3 md:gap-16">
               <FooterCol title="Platform">
@@ -117,14 +119,20 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                 <FooterLink to="/contact">Contact</FooterLink>
               </FooterCol>
               <FooterCol title="Legal">
+                <FooterLink to="/disclaimer">Disclaimer</FooterLink>
                 <FooterLink to="/terms">Terms</FooterLink>
                 <FooterLink to="/privacy">Privacy</FooterLink>
                 <FooterLink to="/cookies">Cookies</FooterLink>
               </FooterCol>
             </div>
           </div>
-          <div className="mt-16 border-t border-paper/10 pt-8 text-xs text-paper/40">
-            © {new Date().getFullYear()} Anew Collective
+          <div className="mt-16 border-t border-paper/10 pt-8 text-xs text-paper/40 space-y-2">
+            <p>
+              © {new Date().getFullYear()} Leucherin Fletcher Blackman · Anew / INM8TE Book ·{" "}
+              <Link to="/disclaimer" className="hover:text-accent transition-colors">
+                Disclaimer applies
+              </Link>
+            </p>
           </div>
         </div>
       </footer>

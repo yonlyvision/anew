@@ -1,1 +1,14 @@
-project_id = "omewhkftfvliupgeebtn"
+project_id = "ezoptldbgatxbgaowgtv"
+
+[auth]
+site_url = "https://connections.inm8tebook.net"
+additional_redirect_urls = [
+  "https://connections.inm8tebook.net/dashboard",
+  "https://connections.inm8tebook.net/reset-password",
+  "http://localhost:8080/dashboard",
+  "http://localhost:8080/reset-password",
+]
+
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/public/hook_require_approved_application"

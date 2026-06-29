@@ -24,7 +24,21 @@ export const Route = createFileRoute("/privacy")({
         <p>
           Your privacy is the foundation of trust on Anew. We collect the minimum information
           needed to run a safe community, we never sell your data, and we never let search engines
-          index member profiles.
+          index member profiles. Anew is operated by Leucherin Fletcher Blackman, Sole Proprietor,
+          Ontario, Canada. Our <a href="/disclaimer">Website Disclaimer</a> also applies to your use
+          of the Service.
+        </p>
+
+        <h2>Consent and sensitive information</h2>
+        <p>
+          Some of the information you may choose to share on Anew is sensitive — for example, your
+          sexual orientation, religious or philosophical beliefs, health or recovery history, or
+          biometric data used for selfie verification. Under Canada's Personal Information
+          Protection and Electronic Documents Act (PIPEDA), sensitive information requires your
+          express, informed consent. We only collect this information when you choose to provide it,
+          we explain why before you do, and we use it only for the purposes described here. You can
+          withdraw your consent at any time (subject to legal or contractual limits) by editing your
+          profile or contacting us.
         </p>
 
         <h2>What we collect</h2>
@@ -84,14 +98,23 @@ export const Route = createFileRoute("/privacy")({
         <h2>Your rights</h2>
         <p>
           Depending on where you live, you have rights to access, correct, export, restrict, or
-          delete your personal data. You can exercise most rights directly from Settings, or by
-          contacting us. We respond within 30 days.
+          delete your personal data, and to withdraw consent you previously gave. You can exercise
+          most rights directly from Settings, or by contacting us. We respond within 30 days.
         </p>
 
         <h2>International transfers</h2>
         <p>
           Where data is transferred outside your country, we rely on standard contractual clauses
           or other lawful mechanisms.
+        </p>
+
+        <h2>Our Privacy Officer</h2>
+        <p>
+          As required under PIPEDA, we have designated a Privacy Officer who is accountable for our
+          handling of personal information and for responding to access requests and complaints. You
+          can reach the Privacy Officer via <a href="/contact">our contact form</a>. If you are not
+          satisfied with our response, you may contact the Office of the Privacy Commissioner of
+          Canada.
         </p>
 
         <h2>Contact</h2>

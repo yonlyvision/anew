@@ -3,6 +3,14 @@ import { z } from "zod";
 
 const DEV_BYPASS_TOKEN = "dev-turnstile-pass";
 
+function isProductionRuntime() {
+  return (
+    process.env.NODE_ENV === "production" ||
+    process.env.VERCEL === "1" ||
+    process.env.VERCEL_ENV === "production"
+  );
+}
+
 export const verifyAuthCaptcha = createServerFn({ method: "POST" })
   .inputValidator((input) =>
     z
@@ -18,10 +26,10 @@ export const verifyAuthCaptcha = createServerFn({ method: "POST" })
       process.env.TURNSTILE_SECRET;
 
     if (!secret) {
-      if (data.turnstileToken !== DEV_BYPASS_TOKEN) {
-        throw new Error("CAPTCHA is not configured for this environment.");
+      if (!isProductionRuntime() && data.turnstileToken === DEV_BYPASS_TOKEN) {
+        return { ok: true, mode: "bypass" as const };
       }
-      return { ok: true, mode: "bypass" as const };
+      throw new Error("CAPTCHA is not configured for this environment.");
     }
 
     const response = await fetch(
@@ -50,4 +58,55 @@ export const verifyAuthCaptcha = createServerFn({ method: "POST" })
     }
 
     return { ok: true, mode: "verified" as const };
+  });
+
+export const submitContactMessage = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        name: z.string().min(1).max(200),
+        email: z.string().email().max(320),
+        reason: z.string().min(1).max(200),
+        message: z.string().min(1).max(5000),
+        turnstileToken: z.string().min(1, "Missing CAPTCHA token"),
+      })
+      .parse(input)
+  )
+  .handler(async ({ data }) => {
+    await verifyAuthCaptcha({ data: { turnstileToken: data.turnstileToken } });
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("contact_messages").insert({
+      name: data.name.trim(),
+      email: data.email.trim().toLowerCase(),
+      subject: data.reason.trim(),
+      message: data.message.trim(),
+    });
+    if (error) throw new Error(error.message);
+
+    return { ok: true };
+  });
+
+export const checkApplicationApproval = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z
+      .object({
+        email: z.string().email().max(255),
+        turnstileToken: z.string().min(1, "Missing CAPTCHA token"),
+      })
+      .parse(input)
+  )
+  .handler(async ({ data }) => {
+    await verifyAuthCaptcha({ data: { turnstileToken: data.turnstileToken } });
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+    const { data: row, error } = await supabaseAdmin
+      .from("applications")
+      .select("status")
+      .eq("email", email)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) return { status: "none" as const };
+    return { status: row.status as "pending" | "approved" | "denied" };
   });

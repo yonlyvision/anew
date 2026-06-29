@@ -5,9 +5,6 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { setProfilePaused, deleteOwnAccount } from "@/lib/profile.functions";
-import { createPortalSession } from "@/lib/payments.functions";
-import { useSubscription } from "@/hooks/useSubscription";
-import { getStripeEnvironment } from "@/lib/stripe";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({ meta: [{ title: "Settings — Anew" }, { name: "robots", content: "noindex" }] }),
@@ -19,8 +16,6 @@ function SettingsPage() {
   const navigate = useNavigate();
   const pauseFn = useServerFn(setProfilePaused);
   const deleteFn = useServerFn(deleteOwnAccount);
-  const portalFn = useServerFn(createPortalSession);
-  const { subscription, isActive } = useSubscription(userId);
 
   const [email, setEmail] = useState("");
   const [paused, setPaused] = useState(false);
@@ -132,50 +127,8 @@ function SettingsPage() {
 
         <Card title="Membership">
           <p className="text-sm text-ink/60">
-            {isActive
-              ? `Premium — ${tierLabel(subscription?.tier)}. ${
-                  subscription?.cancel_at_period_end
-                    ? "Cancels at period end."
-                    : "Renews automatically."
-                }`
-              : "You're on the Free plan."}
+            You're on the Free plan — full access at no cost. Premium features are on the way.
           </p>
-          <div className="flex gap-3 pt-2">
-            {isActive ? (
-              <button
-                type="button"
-                onClick={async () => {
-                  setBusy(true);
-                  try {
-                    const result = await portalFn({
-                      data: {
-                        environment: getStripeEnvironment(),
-                        returnUrl: `${window.location.origin}/settings`,
-                      },
-                    });
-                    if ("error" in result) throw new Error(result.error);
-                    window.open(result.url, "_blank");
-                  } catch (err) {
-                    toast.error(err instanceof Error ? err.message : "Failed");
-                  } finally {
-                    setBusy(false);
-                  }
-                }}
-                disabled={busy}
-                className="border border-ink px-5 py-2 text-[11px] uppercase tracking-[0.25em] hover:bg-ink hover:text-paper disabled:opacity-50"
-              >
-                Manage billing
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => navigate({ to: "/pricing" })}
-                className="bg-ink px-5 py-2 text-[11px] uppercase tracking-[0.25em] text-paper hover:bg-accent"
-              >
-                Upgrade to Premium
-              </button>
-            )}
-          </div>
         </Card>
 
         <Card title="Blocked members">
@@ -216,17 +169,6 @@ function SettingsPage() {
       </div>
     </section>
   );
-}
-
-const TIER_LABELS: Record<string, string> = {
-  monthly: "Monthly",
-  three_month: "3 months",
-  six_month: "6 months",
-  yearly: "12 months",
-};
-function tierLabel(tier: string | null | undefined): string {
-  if (!tier) return "Premium";
-  return TIER_LABELS[tier] ?? tier;
 }
 
 function Card({ title, tone, children }: { title: string; tone?: "danger"; children: React.ReactNode }) {

@@ -9,7 +9,16 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "supabase:audit": "node scripts/supabase-audit.mjs",
+    "supabase:auth-config": "node scripts/supabase-push-auth-config.mjs",
+    "supabase:smtp-status": "node scripts/supabase-smtp-status.mjs",
+    "supabase:smtp-config": "node scripts/supabase-push-smtp-config.mjs",
+    "supabase:email-remediation": "node scripts/supabase-email-remediation.mjs",
+    "resend:smtp-setup": "node scripts/resend-smtp-setup.mjs",
+    "cloudflare:turnstile-setup": "node scripts/cloudflare-turnstile-setup.mjs",
+    "turnstile:paste-server": "node scripts/turnstile-paste-server.mjs",
+    "vercel:sync-env": "node scripts/vercel-sync-env.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

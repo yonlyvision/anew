@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useState, type FormEvent } from "react";
+
 import { PageHero, SiteLayout } from "@/components/site/SiteLayout";
+import { TurnstileWidget } from "@/components/site/TurnstileWidget";
+import { submitContactMessage } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -25,11 +29,38 @@ const reasons = [
   "Report a member",
   "Partnership",
   "Media inquiry",
-  "Billing question",
 ] as const;
 
 function Contact() {
+  const submitFn = useServerFn(submitContactMessage);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [reason, setReason] = useState<(typeof reasons)[number]>(reasons[0]);
+  const [message, setMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!turnstileToken) {
+      setError("Please complete the CAPTCHA.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await submitFn({
+        data: { name, email, reason, message, turnstileToken },
+      });
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SiteLayout>
@@ -40,47 +71,75 @@ function Contact() {
       />
       <section className="mx-auto max-w-2xl px-6 md:px-8 pb-32">
         {sent ? (
-          <div className="border border-ink/10 p-10 text-center space-y-4">
+          <div className="rounded-2xl border border-ink/10 p-10 text-center space-y-4">
             <p className="font-serif text-2xl">Thank you.</p>
             <p className="text-ink/60">Your note is with our team. We will be in touch soon.</p>
+            <p className="text-sm text-ink/45">
+              For urgent safety matters, you can also email{" "}
+              <a href="mailto:support@inm8tebook.net" className="text-accent hover:underline">
+                support@inm8tebook.net
+              </a>
+              .
+            </p>
           </div>
         ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-            }}
-            className="space-y-6"
-          >
-            <Field label="Your name" name="name" required />
-            <Field label="Email" name="email" type="email" required />
-            <div className="space-y-2">
-              <label className="text-[11px] uppercase tracking-[0.25em] text-ink/60">Reason</label>
-              <select
-                name="reason"
+          <form onSubmit={onSubmit} className="space-y-6">
+            <Field label="Your name">
+              <input
                 required
-                className="w-full border border-ink/15 bg-paper px-4 py-3 text-sm focus:border-ink outline-none"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={200}
+                className={fieldClassName}
+              />
+            </Field>
+            <Field label="Email">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={320}
+                className={fieldClassName}
+              />
+            </Field>
+            <Field label="Reason">
+              <select
+                required
+                value={reason}
+                onChange={(e) => setReason(e.target.value as (typeof reasons)[number])}
+                className={fieldClassName}
               >
                 {reasons.map((r) => (
-                  <option key={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] uppercase tracking-[0.25em] text-ink/60">Message</label>
+            </Field>
+            <Field label="Message">
               <textarea
-                name="message"
                 required
                 rows={6}
-                maxLength={2000}
-                className="w-full border border-ink/15 bg-paper px-4 py-3 text-sm focus:border-ink outline-none resize-y"
+                maxLength={5000}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className={`${fieldClassName} resize-y min-h-32`}
               />
+            </Field>
+
+            <div className="rounded-2xl border border-ink/8 bg-paper/75 px-4 py-4">
+              <TurnstileWidget onToken={setTurnstileToken} className="flex justify-center" />
             </div>
+
+            {error && <p className="text-sm text-destructive">{error}</p>}
+
             <button
               type="submit"
-              className="px-8 py-4 bg-ink text-paper text-xs uppercase tracking-[0.25em] hover:bg-accent transition-colors"
+              disabled={loading || !turnstileToken}
+              className="px-8 py-4 bg-ink text-paper text-xs uppercase tracking-[0.25em] hover:bg-accent transition-colors disabled:opacity-60"
             >
-              Send
+              {loading ? "Sending…" : "Send"}
             </button>
           </form>
         )}
@@ -89,27 +148,14 @@ function Contact() {
   );
 }
 
-function Field({
-  label,
-  name,
-  type = "text",
-  required,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-}) {
+const fieldClassName =
+  "w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm focus:border-accent focus:outline-none";
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-2">
       <label className="text-[11px] uppercase tracking-[0.25em] text-ink/60">{label}</label>
-      <input
-        type={type}
-        name={name}
-        required={required}
-        maxLength={255}
-        className="w-full border border-ink/15 bg-paper px-4 py-3 text-sm focus:border-ink outline-none"
-      />
+      {children}
     </div>
   );
 }

@@ -17,6 +17,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CommunityValuesRouteImport } from './routes/community-values'
@@ -97,6 +98,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -329,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/community-values': typeof CommunityValuesRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
@@ -379,6 +386,7 @@ export interface FileRoutesByTo {
   '/community-values': typeof CommunityValuesRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
@@ -430,6 +438,7 @@ export interface FileRoutesById {
   '/community-values': typeof CommunityValuesRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
@@ -482,6 +491,7 @@ export interface FileRouteTypes {
     | '/community-values'
     | '/contact'
     | '/cookies'
+    | '/disclaimer'
     | '/faq'
     | '/how-it-works'
     | '/pricing'
@@ -532,6 +542,7 @@ export interface FileRouteTypes {
     | '/community-values'
     | '/contact'
     | '/cookies'
+    | '/disclaimer'
     | '/faq'
     | '/how-it-works'
     | '/pricing'
@@ -582,6 +593,7 @@ export interface FileRouteTypes {
     | '/community-values'
     | '/contact'
     | '/cookies'
+    | '/disclaimer'
     | '/faq'
     | '/how-it-works'
     | '/pricing'
@@ -634,6 +646,7 @@ export interface RootRouteChildren {
   CommunityValuesRoute: typeof CommunityValuesRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
   PricingRoute: typeof PricingRoute
@@ -704,6 +717,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -1112,6 +1132,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityValuesRoute: CommunityValuesRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
+  DisclaimerRoute: DisclaimerRoute,
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
   PricingRoute: PricingRoute,

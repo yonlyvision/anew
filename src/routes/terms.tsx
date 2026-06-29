@@ -19,9 +19,11 @@ export const Route = createFileRoute("/terms")({
 
         <h2>1. Who we are</h2>
         <p>
-          Anew (the "Service") is operated by Anew Ltd ("we", "us"). By creating an account you
-          ("Member") agree to these Terms and to our <a href="/privacy">Privacy Policy</a> and{" "}
-          <a href="/community-values">Community Values</a>.
+          Anew (the &quot;Service&quot;), hosted at connections.inm8tebook.net, is operated by
+          Leucherin Fletcher Blackman, Sole Proprietor, Province of Ontario, Canada (&quot;we&quot;,
+          &quot;us&quot;). By creating an account you (&quot;Member&quot;) agree to these Terms, our{" "}
+          <a href="/disclaimer">Website Disclaimer</a>, our <a href="/privacy">Privacy Policy</a>,
+          and our <a href="/community-values">Community Values</a>.
         </p>
 
         <h2>2. Eligibility</h2>
@@ -61,12 +63,14 @@ export const Route = createFileRoute("/terms")({
           time from Settings.
         </p>
 
-        <h2>6. Subscriptions and payments</h2>
+        <h2>6. Membership and payments</h2>
         <p>
-          Some features are available only with a paid plan. Paid plans renew automatically at the
-          end of each billing period until cancelled. You can cancel at any time from Settings;
-          cancellation takes effect at the end of the current billing period and no partial refunds
-          are issued except where required by law.
+          Anew is currently free to use, and there is nothing to pay to join or use the Service
+          today. We may introduce optional paid plans in the future. If we do, we will show the
+          price and terms clearly before you are charged, any paid plan will renew automatically
+          until cancelled, and you will be able to cancel at any time from Settings (cancellation
+          takes effect at the end of the current billing period, with no partial refunds except
+          where required by law).
         </p>
 
         <h2>7. Suspension and termination</h2>
@@ -78,9 +82,12 @@ export const Route = createFileRoute("/terms")({
 
         <h2>8. Disclaimers</h2>
         <p>
-          The Service is provided "as is". We do not guarantee matches, outcomes, or the conduct of
-          other Members. You are responsible for your own decisions and interactions on and off the
-          platform.
+          The Service is provided &quot;as is&quot;. We do not guarantee matches, outcomes, or the
+          conduct of other Members. You are responsible for your own decisions and interactions on
+          and off the platform. Important safety limitations — including that we do not conduct
+          criminal background checks — are set out in our{" "}
+          <a href="/disclaimer">Website Disclaimer</a>, which is incorporated into these Terms by
+          reference.
         </p>
 
         <h2>9. Limitation of liability</h2>

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { TurnstileWidget } from "@/components/site/TurnstileWidget";
 import { supabase } from "@/integrations/supabase/client";
-import { verifyAuthCaptcha } from "@/lib/contact.functions";
+import { verifyAuthCaptcha, checkApplicationApproval } from "@/lib/contact.functions";
 import { useServerFn } from "@tanstack/react-start";
 
 const searchSchema = z.object({
@@ -42,6 +42,7 @@ function AuthPage() {
   const [info, setInfo] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const verifyCaptcha = useServerFn(verifyAuthCaptcha);
+  const checkApproval = useServerFn(checkApplicationApproval);
 
   useEffect(() => {
     setMode(search.mode ?? "signin");
@@ -74,6 +75,25 @@ function AuthPage() {
       await verifyCaptcha({ data: { turnstileToken } });
 
       if (mode === "signup") {
+        const approval = await checkApproval({
+          data: { email, turnstileToken },
+        });
+        if (approval.status === "none") {
+          throw new Error(
+            "We don't have an application for this email yet. Apply first, then create your account once you're approved."
+          );
+        }
+        if (approval.status === "pending") {
+          throw new Error(
+            "Your application is still under review. We'll email you within 3–5 days — you can create your account once you're approved."
+          );
+        }
+        if (approval.status === "denied") {
+          throw new Error(
+            "This email wasn't approved for membership. If you think that's a mistake, contact us via the Contact page."
+          );
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -82,7 +102,17 @@ function AuthPage() {
             emailRedirectTo: window.location.origin + "/dashboard",
           },
         });
-        if (error) throw error;
+        if (error) {
+          if (
+            error.message.toLowerCase().includes("not been approved") ||
+            error.message.toLowerCase().includes("application")
+          ) {
+            throw new Error(
+              "This email hasn't been approved yet. Apply first, then wait for our approval email before creating an account."
+            );
+          }
+          throw error;
+        }
         setInfo("Welcome. Taking you to your dashboard…");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -93,15 +123,6 @@ function AuthPage() {
     } finally {
       setLoading(false);
     }
-  }
-
-  async function onGoogle() {
-    setError(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin + "/dashboard" },
-    });
-    if (error) setError(error.message ?? "Could not sign in with Google");
   }
 
   const applying = mode === "signup";
@@ -196,20 +217,6 @@ function AuthPage() {
             </div>
 
             <div className="mt-8 space-y-4">
-              <button
-                type="button"
-                onClick={onGoogle}
-                className="w-full rounded-full border border-ink/10 bg-paper py-3 text-sm font-medium transition-colors hover:bg-muted-warm"
-              >
-                Continue with Google
-              </button>
-              <div className="relative text-center">
-                <span className="relative z-10 bg-card px-3 text-xs text-ink/40">
-                  or with email
-                </span>
-                <div className="absolute inset-x-0 top-1/2 h-px bg-ink/10" />
-              </div>
-
               <form onSubmit={onSubmit} className="space-y-4">
                 {applying && (
                   <Field label="First name">
@@ -264,11 +271,16 @@ function AuthPage() {
                 </button>
               </form>
 
-              <div className="flex items-center justify-between gap-4 pt-2 text-xs text-ink/55">
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs text-ink/55">
                 {applying ? (
-                  <button type="button" onClick={() => setMode("signin")} className="hover:text-accent">
-                    Already a member? Sign in
-                  </button>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    <button type="button" onClick={() => setMode("signin")} className="hover:text-accent">
+                      Already a member? Sign in
+                    </button>
+                    <Link to="/apply" className="hover:text-accent">
+                      Haven't applied? Apply first
+                    </Link>
+                  </div>
                 ) : (
                   <Link to="/apply" className="hover:text-accent">
                     New here? Apply to join

@@ -21,7 +21,7 @@ export const Route = createFileRoute("/faq")({
 const items = [
   {
     q: "Is Anew only for people with a difficult past?",
-    a: "No. Anew is for anyone who believes in growth, honesty, and second chances — including open-hearted people who are willing to meet someone beyond their past.",
+    a: "Anew was built for two groups: people rebuilding after something hard — time away, recovery, divorce, a season they'd rather not lead with — and people secure enough to meet someone as they are today, not as a headline. You don't need a 'story' to belong. But if you've ever felt judged too fast on other apps, you're in the right place.",
   },
   {
     q: "Can regular people join?",
@@ -33,7 +33,7 @@ const items = [
   },
   {
     q: "How is the platform kept safe?",
-    a: "Verification (email, phone, selfie, optional ID), human moderators, one-tap report and block tools, and a clear community code we actually enforce.",
+    a: "Verification (email, phone, selfie, optional ID), reports reviewed by a real person, one-tap report and block tools, and a clear community code we actually enforce. We aim to review reports within 24 hours.",
   },
   {
     q: "Can I delete or pause my account?",
@@ -49,7 +49,7 @@ const items = [
   },
   {
     q: "Is Anew free?",
-    a: "Yes. A free plan lets you build a profile, browse, like, match, and message your matches. Premium adds full visibility, unlimited likes, and advanced filters.",
+    a: "Yes — completely free right now. While we grow the founding community, every member gets full access: build a profile, browse, like, match, and message. Premium features are something we may add later, but there's nothing to pay today.",
   },
 ] as const;
 

@@ -9,7 +9,8 @@ export const submitApplication = createServerFn({ method: "POST" })
       .object({
         email: z.string().email().max(255),
         firstName: z.string().min(1).max(100),
-        message: z.string().max(1000).optional(),
+        // Holds the composed application answers (location, intent, note, etc.).
+        message: z.string().max(3000).optional(),
         turnstileToken: z.string().min(1, "Missing CAPTCHA token"),
       })
       .parse(input)

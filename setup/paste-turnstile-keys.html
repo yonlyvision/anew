@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paste Turnstile keys — Anew</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 36rem;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+      background: #fff7f1;
+      color: #201714;
+    }
+    h1 { font-family: Georgia, serif; font-size: 1.5rem; font-weight: 500; }
+    p { line-height: 1.6; color: #5c5048; font-size: 0.95rem; }
+    label { display: block; margin-top: 1.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #8a7568; }
+    input, textarea {
+      width: 100%;
+      margin-top: 0.4rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd0c4;
+      border-radius: 0.75rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 999px;
+      background: #201714;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    button:hover { background: #e56254; }
+    .out {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid #ddd0c4;
+      border-radius: 0.75rem;
+      display: none;
+    }
+    .out.show { display: block; }
+    .out pre { white-space: pre-wrap; word-break: break-all; font-size: 0.8rem; margin: 0.5rem 0 0; }
+    .ok { color: #2d7a4f; font-size: 0.9rem; margin-top: 0.75rem; }
+  </style>
+</head>
+<body>
+  <h1>Paste Turnstile keys</h1>
+  <p>From Cloudflare → Turnstile → your widget. Paste below, then copy the lines into <strong>.env</strong> in the project root (or tell the agent “Turnstile keys saved” after saving .env).</p>
+
+  <label for="site">Site key</label>
+  <input id="site" type="text" placeholder="0x4AAAAAAA..." autocomplete="off" />
+
+  <label for="secret">Secret key</label>
+  <input id="secret" type="password" placeholder="0x4AAAAAAA..." autocomplete="off" />
+
+  <button type="button" id="btn">Copy .env lines</button>
+  <button type="button" id="save" style="margin-top:0.75rem;background:#2d7a4f">Save to .env (project)</button>
+  <p id="saveStatus" class="ok" hidden></p>
+
+  <div class="out" id="out">
+    <strong>Add these to your <code>.env</code> file:</strong>
+    <pre id="lines"></pre>
+    <p class="ok" id="copied" hidden>Copied to clipboard.</p>
+  </div>
+
+  <script>
+    async function saveKeys() {
+      const site = document.getElementById("site").value.trim();
+      const secret = document.getElementById("secret").value.trim();
+      const status = document.getElementById("saveStatus");
+      if (!site || !secret) {
+        alert("Paste both keys first.");
+        return;
+      }
+      status.hidden = false;
+      status.textContent = "Saving…";
+      try {
+        const res = await fetch("http://localhost:8765/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ siteKey: site, secretKey: secret }),
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Save failed");
+        status.textContent = "Saved to .env — you can close this page and tell the agent.";
+      } catch {
+        status.textContent =
+          "Could not save. Run in terminal: npm run turnstile:paste-server — then open http://localhost:8765/";
+      }
+    }
+
+    document.getElementById("btn").onclick = async () => {
+      const site = document.getElementById("site").value.trim();
+      const secret = document.getElementById("secret").value.trim();
+      if (!site || !secret) {
+        alert("Paste both keys first.");
+        return;
+      }
+      const text =
+        "VITE_TURNSTILE_SITE_KEY=" + site + "\n" +
+        "TURNSTILE_SECRET_KEY=" + secret;
+      document.getElementById("lines").textContent = text;
+      document.getElementById("out").classList.add("show");
+      try {
+        await navigator.clipboard.writeText(text);
+        document.getElementById("copied").hidden = false;
+      } catch {
+        document.getElementById("copied").textContent = "Select the text above and copy manually.";
+        document.getElementById("copied").hidden = false;
+      }
+    };
+
+    document.getElementById("save").onclick = saveKeys;
+  </script>
+</body>
+</html>

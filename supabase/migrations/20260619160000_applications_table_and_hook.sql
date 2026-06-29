@@ -58,3 +58,7 @@ grant execute
 revoke execute
   on function public.hook_require_approved_application
   from authenticated, anon, public;
+
+-- Auth service needs schema usage + read on applications when invoking the hook.
+grant usage on schema public to supabase_auth_admin;
+grant select on public.applications to supabase_auth_admin;
