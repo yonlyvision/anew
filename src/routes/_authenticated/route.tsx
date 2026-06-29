@@ -16,6 +16,16 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/auth", search: { redirect: location.href } });
     }
 
+    // Accounts provisioned with a temporary password must set their own
+    // before doing anything else. The change-password page itself is exempt
+    // (otherwise we'd redirect-loop).
+    const mustChangePassword =
+      (data.user.user_metadata as { must_change_password?: boolean } | null)
+        ?.must_change_password === true;
+    if (mustChangePassword && location.pathname !== "/change-password") {
+      throw redirect({ to: "/change-password" });
+    }
+
     try {
       const status = await getAccountStatus();
       if (status.isBanned) {
