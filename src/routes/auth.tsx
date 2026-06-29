@@ -6,7 +6,6 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { TurnstileWidget } from "@/components/site/TurnstileWidget";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAuthCaptcha } from "@/lib/contact.functions";
-import { lovable } from "@/integrations/lovable/index";
 import { useServerFn } from "@tanstack/react-start";
 
 const searchSchema = z.object({
@@ -98,10 +97,11 @@ function AuthPage() {
 
   async function onGoogle() {
     setError(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/dashboard",
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + "/dashboard" },
     });
-    if (result.error) setError(result.error.message ?? "Could not sign in with Google");
+    if (error) setError(error.message ?? "Could not sign in with Google");
   }
 
   const applying = mode === "signup";

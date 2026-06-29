@@ -8,9 +8,8 @@ const getEnv = (key: string): string => {
 
 export type StripeEnv = 'sandbox' | 'live';
 
-const GATEWAY_STRIPE_BASE = 'https://connector-gateway.lovable.dev/stripe';
-
-export function getConnectionApiKey(env: StripeEnv): string {
+// Direct Stripe secret keys (sk_test_… for sandbox, sk_live_… for live).
+export function getStripeSecretKey(env: StripeEnv): string {
   return env === 'sandbox'
     ? getEnv('STRIPE_SANDBOX_API_KEY')
     : getEnv('STRIPE_LIVE_API_KEY');
@@ -23,24 +22,9 @@ export function getWebhookSecret(env: StripeEnv): string {
 }
 
 export function createStripeClient(env: StripeEnv): Stripe {
-  const connectionApiKey = getConnectionApiKey(env);
-  const lovableApiKey = getEnv('LOVABLE_API_KEY');
-
-  return new Stripe(connectionApiKey, {
-    apiVersion: '2026-03-25.dahlia',
-    httpClient: Stripe.createFetchHttpClient(((input: RequestInfo | URL, init?: RequestInit) => {
-      const original = typeof input === 'string' || input instanceof URL ? input.toString() : input.url;
-      const gatewayUrl = original.replace('https://api.stripe.com', GATEWAY_STRIPE_BASE);
-      return fetch(gatewayUrl, {
-        ...init,
-        headers: {
-          ...Object.fromEntries(new Headers(init?.headers).entries()),
-          'X-Connection-Api-Key': connectionApiKey,
-          'Lovable-API-Key': lovableApiKey,
-        },
-      });
-    }) as typeof fetch),
-  });
+  // Talk to Stripe's API directly. (Previously routed through Lovable's
+  // connector gateway; now self-hosted, so we use the account's own keys.)
+  return new Stripe(getStripeSecretKey(env));
 }
 
 export function getStripeErrorMessage(error: unknown): string {

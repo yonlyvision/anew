@@ -66,14 +66,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
         customer: customerId,
-        metadata: { userId, managed_payments: "true" },
+        metadata: { userId },
         ...(isRecurring && {
           subscription_data: { metadata: { userId } },
         }),
-        // managed_payments is supported by the Lovable Stripe gateway but
-        // not yet typed in the SDK we pin to.
-        ...({ managed_payments: { enabled: true } } as Record<string, unknown>),
-      } as Parameters<typeof stripe.checkout.sessions.create>[0]);
+      });
 
       return { clientSecret: session.client_secret ?? "" };
     } catch (error) {
