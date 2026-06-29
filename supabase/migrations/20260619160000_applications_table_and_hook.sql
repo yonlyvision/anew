@@ -18,6 +18,9 @@ alter table public.applications enable row level security;
 -- server functions using the service role (same pattern as verifications,
 -- reports, contact_messages). The hook function below is SECURITY DEFINER
 -- so it can read this table without needing its own policy.
+-- service_role needs an explicit table grant (don't rely on schema default
+-- privileges, which may be absent on a freshly-reset/self-hosted project).
+grant all on public.applications to service_role;
 
 create or replace function public.hook_require_approved_application(event jsonb)
 returns jsonb
