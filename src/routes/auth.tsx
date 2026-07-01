@@ -6,6 +6,8 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { TurnstileWidget } from "@/components/site/TurnstileWidget";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyAuthCaptcha, checkApplicationApproval } from "@/lib/contact.functions";
+import { getStaffStatus } from "@/lib/admin.functions";
+import { isMemberDatingPath } from "@/lib/member-nav";
 import { useServerFn } from "@tanstack/react-start";
 
 const searchSchema = z.object({
@@ -44,10 +46,22 @@ function AuthPage() {
   const [agreeDisclaimer, setAgreeDisclaimer] = useState(false);
   const verifyCaptcha = useServerFn(verifyAuthCaptcha);
   const checkApproval = useServerFn(checkApplicationApproval);
+  const staffStatusFn = useServerFn(getStaffStatus);
 
-  useEffect(() => {
-    setMode(search.mode ?? "signin");
-  }, [search.mode]);
+  async function resolvePostAuthPath(fallback?: string) {
+    try {
+      const staff = await staffStatusFn();
+      if (staff.isStaff) {
+        if (fallback && !isMemberDatingPath(fallback) && fallback.startsWith("/")) {
+          return fallback;
+        }
+        return "/admin";
+      }
+    } catch {
+      /* fall through to member path */
+    }
+    return fallback ?? "/dashboard";
+  }
 
   useEffect(() => {
     const {
@@ -55,16 +69,26 @@ function AuthPage() {
     } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session) {
         router.invalidate();
-        navigate({ to: search.redirect ?? "/dashboard", replace: true });
+        void resolvePostAuthPath(search.redirect).then((to) => {
+          navigate({ to, replace: true });
+        });
       }
     });
 
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: search.redirect ?? "/dashboard", replace: true });
+      if (data.user) {
+        void resolvePostAuthPath(search.redirect).then((to) => {
+          navigate({ to, replace: true });
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, router, search.redirect]);
+  }, [navigate, router, search.redirect, staffStatusFn]);
+
+  useEffect(() => {
+    setMode(search.mode ?? "signin");
+  }, [search.mode]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();

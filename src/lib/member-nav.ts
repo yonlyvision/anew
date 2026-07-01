@@ -1,4 +1,4 @@
-/** Member dating/social routes — staff admins should use /admin instead. */
+/** Member dating/social routes — any admin or moderator account uses /admin instead. */
 export function isMemberDatingPath(pathname: string): boolean {
   if (pathname.startsWith("/admin")) return false;
   if (pathname.startsWith("/settings") || pathname === "/change-password") return false;

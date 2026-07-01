@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { logAdminAction } from "@/lib/audit.server";
 import { signProfilePhotoUrls, withPrimaryPhotoUrls } from "@/lib/photos.server";
+import { ensureStaffProfileReady } from "@/lib/staff.server";
 
 async function assertStaff(userId: string) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -41,11 +42,30 @@ export const getStaffStatus = createServerFn({ method: "GET" })
       .select("role")
       .eq("user_id", context.userId);
     const roles = (data ?? []).map((r) => r.role);
+    const isStaff = roles.includes("admin") || roles.includes("moderator");
+    if (isStaff) {
+      await ensureStaffProfileReady(supabaseAdmin, context.userId);
+    }
     return {
       isAdmin: roles.includes("admin"),
       isModerator: roles.includes("moderator"),
-      isStaff: roles.includes("admin") || roles.includes("moderator"),
+      isStaff,
     };
+  });
+
+export const prepareStaffAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const roles = (data ?? []).map((r) => r.role);
+    const isStaff = roles.includes("admin") || roles.includes("moderator");
+    if (!isStaff) return { prepared: false as const };
+    await ensureStaffProfileReady(supabaseAdmin, context.userId);
+    return { prepared: true as const };
   });
 
 /* ------------ applications ------------ */

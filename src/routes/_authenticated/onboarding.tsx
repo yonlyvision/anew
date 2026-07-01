@@ -1,12 +1,19 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { getStaffStatus } from "@/lib/admin.functions";
+import { ProfilePhotoUploadPanel } from "@/components/profile/ProfilePhotoUploadPanel";
+import { useSignedPhotoUrl } from "@/hooks/useSignedPhotoUrl";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
+  beforeLoad: async () => {
+    const { getStaffStatus } = await import("@/lib/admin.functions");
+    const staff = await getStaffStatus();
+    if (staff.isStaff) {
+      throw redirect({ to: "/admin" });
+    }
+  },
   head: () => ({ meta: [{ title: "Welcome — Anew" }, { name: "robots", content: "noindex" }] }),
   component: OnboardingPage,
 });
@@ -57,6 +64,12 @@ const STEPS = [
     title: "Describe your new chapter",
     intro: "This is the part people remember. Honest is better than polished.",
   },
+  {
+    key: "photo",
+    label: "Photo",
+    title: "Add a photo (optional)",
+    intro: "A picture helps people connect with you. Skip this for now if you prefer — you can add one later from your profile.",
+  },
 ] as const;
 
 const interestSuggestions = [
@@ -95,20 +108,13 @@ const goalOptions = [
 function OnboardingPage() {
   const { userId } = Route.useRouteContext();
   const navigate = useNavigate();
-  const staffFn = useServerFn(getStaffStatus);
-  // Staff (admins/moderators) don't need a full dating profile — give them a
-  // short two-step setup (basics + location) and drop them straight on the
-  // dashboard, skipping voice/intent/story and the verification redirect.
-  const { data: staff } = useQuery({
-    queryKey: ["me", "staff"],
-    queryFn: () => staffFn(),
-    staleTime: 60_000,
-  });
-  const isStaff = staff?.isStaff ?? false;
-  const steps = useMemo(() => (isStaff ? STEPS.slice(0, 2) : STEPS), [isStaff]);
+  const steps = STEPS;
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [primaryPhoto, setPrimaryPhoto] = useState<string | null>(null);
+  const previewPhotoUrl = useSignedPhotoUrl(primaryPhoto);
   const [form, setForm] = useState<Form>({
     first_name: "",
     date_of_birth: "",
@@ -129,7 +135,7 @@ function OnboardingPage() {
       const { data } = await supabase
         .from("profiles")
         .select(
-          "first_name,date_of_birth,gender,dating_preference,city,country,bio,relationship_goal,interests,values,new_chapter_answer,open_to_second_chance"
+          "first_name,date_of_birth,gender,dating_preference,city,country,bio,relationship_goal,interests,values,new_chapter_answer,open_to_second_chance,photos,primary_photo"
         )
         .eq("id", userId)
         .maybeSingle();
@@ -149,6 +155,8 @@ function OnboardingPage() {
           new_chapter_answer: data.new_chapter_answer ?? "",
           open_to_second_chance: data.open_to_second_chance ?? false,
         }));
+        setPhotos(data.photos ?? []);
+        setPrimaryPhoto(data.primary_photo ?? null);
       }
     })();
   }, [userId]);
@@ -156,10 +164,6 @@ function OnboardingPage() {
   const interests = useMemo(() => splitList(form.interests), [form.interests]);
   const values = useMemo(() => splitList(form.values), [form.values]);
   const completion = Math.round((fieldsFilled(form) / 8) * 100);
-  // If the step list shrinks (staff status resolves), keep the cursor in range.
-  useEffect(() => {
-    setStep((current) => Math.min(current, steps.length - 1));
-  }, [steps.length]);
   const currentStep = steps[step];
   const isLastStep = step === steps.length - 1;
 
@@ -201,7 +205,7 @@ function OnboardingPage() {
       return;
     }
     if (finish) {
-      navigate({ to: isStaff ? "/dashboard" : "/verification", replace: true });
+      navigate({ to: "/verification", replace: true });
       return;
     }
     setStep((current) => Math.min(current + 1, steps.length - 1));
@@ -218,9 +222,8 @@ function OnboardingPage() {
             Let&apos;s make this feel like you.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-ink/62">
-            {isStaff
-              ? "Just the essentials for a staff account — add your basics and location, then head straight to the dashboard."
-              : "Each step saves your progress. Finish your story first, then we will guide you into verification so trust is in place before discovery."}
+            Each step saves your progress. Finish your story first, then we will guide you into
+            verification so trust is in place before discovery.
           </p>
 
           <div className="mt-8 rounded-[2rem] border border-ink/8 bg-card/88 p-6 shadow-[0_24px_70px_-56px_rgba(35,25,22,0.45)] md:p-8">
@@ -250,7 +253,7 @@ function OnboardingPage() {
               </div>
             </div>
 
-            <div className={`mt-8 grid gap-2 ${steps.length <= 2 ? "md:grid-cols-2" : "md:grid-cols-5"}`}>
+            <div className="mt-8 grid gap-2 md:grid-cols-6">
               {steps.map((item, index) => {
                 const active = index === step;
                 const done = index < step;
@@ -424,6 +427,21 @@ function OnboardingPage() {
                 </StepSection>
               )}
 
+              {step === 5 && (
+                <StepSection>
+                  <ProfilePhotoUploadPanel
+                    userId={userId}
+                    photos={photos}
+                    primary={primaryPhoto}
+                    onChange={({ photos: nextPhotos, primary }) => {
+                      setPhotos(nextPhotos);
+                      setPrimaryPhoto(primary);
+                    }}
+                    fallbackInitial={form.first_name?.trim().charAt(0) || "?"}
+                  />
+                </StepSection>
+              )}
+
               {error && <p className="text-sm text-destructive">{error}</p>}
 
               <div className="flex items-center justify-between gap-4 pt-2">
@@ -435,20 +453,30 @@ function OnboardingPage() {
                 >
                   ← Back
                 </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => save(isLastStep)}
-                  className="rounded-full bg-ink px-7 py-3 text-[11px] uppercase tracking-[0.28em] text-paper transition-colors hover:bg-accent disabled:opacity-60"
-                >
-                  {saving
-                    ? "Saving…"
-                    : isLastStep
-                    ? isStaff
-                      ? "Finish & go to dashboard"
-                      : "Finish & verify"
-                    : "Save & continue"}
-                </button>
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                  {step === 5 && (
+                    <button
+                      type="button"
+                      disabled={saving}
+                      onClick={() => save(true)}
+                      className="text-[11px] uppercase tracking-[0.25em] text-ink/45 transition-colors hover:text-ink disabled:opacity-40"
+                    >
+                      Skip for now
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => save(isLastStep)}
+                    className="rounded-full bg-ink px-7 py-3 text-[11px] uppercase tracking-[0.28em] text-paper transition-colors hover:bg-accent disabled:opacity-60"
+                  >
+                    {saving
+                      ? "Saving…"
+                      : isLastStep
+                      ? "Finish & verify"
+                      : "Save & continue"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -460,7 +488,11 @@ function OnboardingPage() {
               Live preview
             </p>
             <div className="mt-5 overflow-hidden rounded-[1.7rem] border border-ink/8 bg-gradient-to-br from-[#fff7f2] via-[#fffdfb] to-[#f6faf7]">
-              <div className="h-40 bg-[radial-gradient(circle_at_30%_25%,_rgba(255,243,223,0.92),_transparent_22%),radial-gradient(circle_at_75%_18%,_rgba(46,138,146,0.20),_transparent_24%),linear-gradient(180deg,_rgba(233,192,154,0.72),_rgba(113,89,72,0.9))]" />
+              {previewPhotoUrl ? (
+                <img src={previewPhotoUrl} alt="" className="h-40 w-full object-cover" />
+              ) : (
+                <div className="h-40 bg-[radial-gradient(circle_at_30%_25%,_rgba(255,243,223,0.92),_transparent_22%),radial-gradient(circle_at_75%_18%,_rgba(46,138,146,0.20),_transparent_24%),linear-gradient(180deg,_rgba(233,192,154,0.72),_rgba(113,89,72,0.9))]" />
+              )}
               <div className="-mt-9 px-5 pb-6">
                 <div className="flex h-18 w-18 items-center justify-center rounded-full border-4 border-paper bg-gradient-to-br from-[#f6d8cf] to-[#d67e64] font-serif text-3xl text-ink shadow-sm">
                   {(form.first_name?.trim().charAt(0) || "?").toUpperCase()}

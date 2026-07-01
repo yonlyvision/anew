@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { signProfilePhotoUrls, withPrimaryPhotoUrls } from "@/lib/photos.server";
+import { getStaffUserIds } from "@/lib/staff.server";
 
 const MESSAGE_RATE_LIMIT = 60;
 const MESSAGE_RATE_WINDOW_MS = 60 * 60 * 1000;
@@ -36,6 +37,9 @@ export const discoverProfiles = createServerFn({ method: "GET" })
 
     const likedIds = new Set((likes ?? []).map((l) => l.liked_id));
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const staffIds = await getStaffUserIds(supabaseAdmin);
+
     let query = supabase
       .from("profiles")
       .select(
@@ -63,6 +67,7 @@ export const discoverProfiles = createServerFn({ method: "GET" })
       man: "men",
     };
     const rows = (data ?? []).filter((p) => {
+      if (staffIds.has(p.id)) return false;
       if (blockedIds.has(p.id)) return false;
       if (likedIds.has(p.id)) return false;
       if (me?.gender && p.dating_preference && p.dating_preference !== "everyone") {
@@ -165,6 +170,9 @@ export const searchProfiles = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const staffIds = await getStaffUserIds(supabaseAdmin);
+
     const urlMap = await signProfilePhotoUrls(
       supabase,
       (rows ?? []).map((p) => p.primary_photo),
@@ -172,7 +180,7 @@ export const searchProfiles = createServerFn({ method: "POST" })
 
     return {
       profiles: withPrimaryPhotoUrls(
-        (rows ?? []).filter((p) => !blockedIds.has(p.id)),
+        (rows ?? []).filter((p) => !blockedIds.has(p.id) && !staffIds.has(p.id)),
         urlMap,
       ),
     };

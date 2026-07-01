@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { ProfilePhotoUploadPanel } from "@/components/profile/ProfilePhotoUploadPanel";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -13,6 +14,8 @@ type Profile = {
   onboarding_completed: boolean | null;
   profile_completion: number | null;
   email_verified: boolean | null;
+  photos: string[] | null;
+  primary_photo: string | null;
 };
 
 function Dashboard() {
@@ -26,7 +29,7 @@ function Dashboard() {
     (async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("first_name,onboarding_completed,profile_completion,email_verified")
+        .select("first_name,onboarding_completed,profile_completion,email_verified,photos,primary_photo")
         .eq("id", userId)
         .maybeSingle();
       if (cancelled) return;
@@ -50,6 +53,7 @@ function Dashboard() {
   }
 
   const completion = profile?.profile_completion ?? 0;
+  const hasPhoto = (profile?.photos?.length ?? 0) > 0 || !!profile?.primary_photo;
 
   return (
     <section className="mx-auto max-w-5xl px-6 py-16 md:py-24">
@@ -60,6 +64,27 @@ function Dashboard() {
       <p className="mt-6 max-w-xl text-ink/70 leading-relaxed">
         Take your time. Be honest. Look at people the way you would want to be looked at.
       </p>
+
+      {!hasPhoto && (
+        <div className="mt-10 rounded-[1.5rem] border border-ink/10 bg-paper/80 p-6 shadow-sm">
+          <h2 className="font-serif text-xl">Add a profile photo</h2>
+          <p className="mt-2 text-sm text-ink/55">Optional — stored on your account and shown when you match.</p>
+          <div className="mt-5">
+            <ProfilePhotoUploadPanel
+              userId={userId}
+              photos={profile?.photos ?? []}
+              primary={profile?.primary_photo ?? null}
+              compact
+              fallbackInitial={profile?.first_name?.trim().charAt(0) || "?"}
+              onChange={({ photos, primary }) => {
+                setProfile((current) =>
+                  current ? { ...current, photos, primary_photo: primary } : current
+                );
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         <Card
