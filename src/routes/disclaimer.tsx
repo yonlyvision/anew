@@ -10,7 +10,7 @@ export const Route = createFileRoute("/disclaimer")({
       {
         name: "description",
         content:
-          "Important safety notice, limitations of liability, and terms of use for the Anew platform operated by Leucherin Fletcher Blackman.",
+          "Important safety notice, limitations of liability, and terms of use for the Anew platform operated by LF.",
       },
     ],
   }),
@@ -25,8 +25,8 @@ function Disclaimer() {
         title="Website Disclaimer and Terms of Use Notice"
         intro={
           <>
-            Inm8teBook.net / Anew Platform · Operated by Leucherin Fletcher Blackman, Sole
-            Proprietor · Province of Ontario, Canada · Effective {EFFECTIVE_DATE}
+            Inm8teBook.net / Anew Platform · Operated by LF, Sole
+            Proprietor · Province of Quebec, Canada · Effective {EFFECTIVE_DATE}
           </>
         }
       />
@@ -42,8 +42,8 @@ function Disclaimer() {
           Inm8teBook.net (also operating under the brand name &quot;Anew&quot;, including at{" "}
           <a href="https://connections.inm8tebook.net">connections.inm8tebook.net</a>) is an online
           social networking and dating platform designed to facilitate connections, communication,
-          and community among adults. The platform is operated by Leucherin Fletcher Blackman, a sole
-          proprietor registered in the Province of Ontario, Canada.
+          and community among adults. The platform is operated by LF, a sole
+          proprietor registered in the Province of Quebec, Canada.
         </p>
         <p>
           The platform is intended for adults who are rebuilding their lives following significant
@@ -160,8 +160,8 @@ function Disclaimer() {
 
         <h2>6. Limitation of liability</h2>
         <p>
-          To the fullest extent permitted under the laws of the Province of Ontario and applicable
-          federal Canadian law, Inm8teBook.net, its owner Leucherin Fletcher Blackman, and any
+          To the fullest extent permitted under the laws of the Province of Quebec and applicable
+          federal Canadian law, Inm8teBook.net, its owner LF, and any
           associated contributors, volunteers, moderators, or service providers shall not be liable
           for any:
         </p>
@@ -214,7 +214,7 @@ function Disclaimer() {
         </p>
         <p>
           This platform operates in compliance with the Personal Information Protection and
-          Electronic Documents Act (PIPEDA) and applicable Ontario privacy legislation. Users have
+          Electronic Documents Act (PIPEDA) and applicable Quebec privacy legislation. Users have
           the right to access, correct, and request deletion of their personal information. To
           exercise these rights, contact:{" "}
           <a href="mailto:support@inm8tebook.net">support@inm8tebook.net</a>.
@@ -247,17 +247,17 @@ function Disclaimer() {
         <h2>12. Governing law and jurisdiction</h2>
         <p>
           This Disclaimer and all matters arising from your use of this platform are governed
-          exclusively by the laws of the Province of Ontario and the federal laws of Canada
+          exclusively by the laws of the Province of Quebec and the federal laws of Canada
           applicable therein, without regard to conflict of law principles. Any dispute arising
-          hereunder shall be subject to the exclusive jurisdiction of the courts of Ontario, Canada.
+          hereunder shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.
         </p>
 
         <h2>Contact information</h2>
         <p>For questions, reports, or legal notices regarding this Disclaimer:</p>
         <ul>
           <li>Platform: Inm8teBook.net / Anew</li>
-          <li>Operator: Leucherin Fletcher Blackman, Sole Proprietor</li>
-          <li>Province: Ontario, Canada</li>
+          <li>Operator: LF, Sole Proprietor</li>
+          <li>Province: Quebec, Canada</li>
           <li>
             Email: <a href="mailto:support@inm8tebook.net">support@inm8tebook.net</a>
           </li>

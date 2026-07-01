@@ -15,7 +15,7 @@ export const Route = createFileRoute("/terms")({
         <h2>1. Who we are</h2>
         <p>
           Anew (the &quot;Service&quot;), hosted at connections.inm8tebook.net, is operated by
-          Leucherin Fletcher Blackman, Sole Proprietor, Province of Ontario, Canada (&quot;we&quot;,
+          LF, Sole Proprietor, Province of Quebec, Canada (&quot;we&quot;,
           &quot;us&quot;). By creating an account you (&quot;Member&quot;) agree to these Terms, our{" "}
           <a href="/disclaimer">Website Disclaimer</a>, our <a href="/privacy">Privacy Policy</a>,
           and our <a href="/community-values">Community Values</a>.

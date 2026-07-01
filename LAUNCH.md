@@ -63,7 +63,7 @@ See **[PRE_PUBLISH_SETUP.md](PRE_PUBLISH_SETUP.md)** — Steps 2–3.
 | Terms & Privacy | Live at `/terms`, `/privacy` | Lawyer review; confirm entity name matches records |
 | Founder name + photo | Placeholder on `/about` | Send name + portrait; we'll swap the placeholder |
 | Effective dates | Set to June 29, 2026 | Confirm or update before go-live |
-| Registered legal entity | Code uses **Leucherin Fletcher Blackman, Sole Proprietor** | Confirm matches business registration |
+| Registered legal entity | Code uses **LF, Sole Proprietor** (Quebec) | Confirm matches business registration |
 
 ---
 

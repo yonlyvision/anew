@@ -19,8 +19,8 @@ export const Route = createFileRoute("/privacy")({
         <p>
           Your privacy is the foundation of trust on Anew. We collect the minimum information
           needed to run a safe community, we never sell your data, and we never let search engines
-          index member profiles. Anew is operated by Leucherin Fletcher Blackman, Sole Proprietor,
-          Ontario, Canada. Our <a href="/disclaimer">Website Disclaimer</a> also applies to your use
+          index member profiles. Anew is operated by LF, Sole Proprietor,
+          Quebec, Canada. Our <a href="/disclaimer">Website Disclaimer</a> also applies to your use
           of the Service.
         </p>
 

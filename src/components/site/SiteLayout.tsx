@@ -130,7 +130,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           </div>
           <div className="mt-16 border-t border-paper/10 pt-8 text-xs text-paper/40 space-y-2">
             <p>
-              © {new Date().getFullYear()} Leucherin Fletcher Blackman · Anew / INM8TE Book ·{" "}
+              © {new Date().getFullYear()} LF · Anew / INM8TE Book ·{" "}
               <Link to="/disclaimer" className="hover:text-accent transition-colors">
                 Disclaimer applies
               </Link>

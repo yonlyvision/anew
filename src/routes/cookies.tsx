@@ -15,7 +15,7 @@ export const Route = createFileRoute("/cookies")({
         <h2>What are cookies?</h2>
         <p>
           Cookies are small text files that websites place on your device. Anew (operated by
-          Leucherin Fletcher Blackman, Sole Proprietor, Ontario, Canada) uses cookies and similar
+          LF, Sole Proprietor, Quebec, Canada) uses cookies and similar
           technologies (such as local storage) to operate the Service, remember your preferences,
           and understand how the Service is used.
         </p>
