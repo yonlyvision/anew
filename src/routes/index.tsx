@@ -120,30 +120,10 @@ function HomePage() {
                 How it works
               </Link>
             </div>
-
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              {trustSignals.map((signal) => (
-                <div
-                  key={signal.title}
-                  className="rounded-3xl border border-ink/8 bg-paper/72 px-4 py-4 backdrop-blur"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/15 to-gold/18 text-accent">
-                    <TrustIcon title={signal.title} />
-                  </div>
-                  <p className="mt-4 text-sm font-semibold text-ink">{signal.title}</p>
-                  <p className="mt-1 text-sm leading-6 text-ink/56">{signal.copy}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Single profile preview on tablet/mobile — the xl collage is desktop-only */}
-            <div className="mt-10 xl:hidden">
-              <MobileProfilePreview />
-            </div>
           </div>
 
-          <div className="relative mx-auto hidden w-full max-w-[40rem] xl:mx-0 xl:block">
-            <div className="absolute left-[3%] top-[8%] z-20 hidden rounded-full border border-ink/8 bg-paper/88 px-4 py-2 text-sm font-medium text-ink shadow-lg backdrop-blur md:inline-flex">
+          <div className="relative mx-auto w-full max-w-[40rem] origin-top scale-[0.82] sm:scale-90 md:scale-95 xl:col-start-2 xl:row-span-2 xl:mx-0 xl:scale-100">
+            <div className="absolute left-[3%] top-[8%] z-20 inline-flex rounded-full border border-ink/8 bg-paper/88 px-4 py-2 text-sm font-medium text-ink shadow-lg backdrop-blur">
               <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-teal" />
               Verified
             </div>
@@ -151,7 +131,7 @@ function HomePage() {
               <span className="text-3xl text-accent">♥</span>
             </div>
 
-            <div className="relative min-h-[38rem]">
+            <div className="relative min-h-[32rem] sm:min-h-[36rem] xl:min-h-[38rem]">
               <HeroMemberCard
                 className="left-0 top-2 z-10 w-[60%] rotate-[-3deg]"
                 name="Marcus"
@@ -184,6 +164,23 @@ function HomePage() {
 
               <QuoteCard />
               <MatchCard />
+            </div>
+          </div>
+
+          <div className="max-w-2xl xl:col-start-1 xl:row-start-2">
+            <div className="grid gap-4 md:grid-cols-3">
+              {trustSignals.map((signal) => (
+                <div
+                  key={signal.title}
+                  className="rounded-3xl border border-ink/8 bg-paper/72 px-4 py-4 backdrop-blur"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/15 to-gold/18 text-accent">
+                    <TrustIcon title={signal.title} />
+                  </div>
+                  <p className="mt-4 text-sm font-semibold text-ink">{signal.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-ink/56">{signal.copy}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -307,32 +304,6 @@ function SectionHeading({
         {title}
       </h2>
       <p className="mt-5 text-base leading-8 text-ink/62">{intro}</p>
-    </div>
-  );
-}
-
-function MobileProfilePreview() {
-  return (
-    <div className="overflow-hidden rounded-[2rem] border border-ink/8 bg-paper shadow-[0_24px_60px_-40px_rgba(37,26,21,0.35)]">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img
-          src={mayaHero}
-          alt="Nadia profile portrait"
-          className="h-full w-full object-cover object-center"
-        />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent px-6 pb-6 pt-16">
-          <div className="inline-flex items-center gap-2 rounded-full bg-paper/90 px-3 py-1 text-xs font-medium text-ink">
-            <span className="inline-block h-2 w-2 rounded-full bg-teal" />
-            Photo verified
-          </div>
-          <h3 className="mt-3 font-serif text-3xl text-paper">Nadia, 31</h3>
-          <p className="mt-1 text-sm text-paper/85">Montreal, QC · Looking for something serious</p>
-          <p className="mt-3 text-sm leading-6 text-paper/80">
-            "I'm attracted to people who have lived, learned, and stopped pretending they
-            haven't."
-          </p>
-        </div>
-      </div>
     </div>
   );
 }

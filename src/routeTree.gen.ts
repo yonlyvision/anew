@@ -43,7 +43,9 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedChangePasswordRouteImport } from './routes/_authenticated/change-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedSettingsPrivacyRouteImport } from './routes/_authenticated/settings.privacy'
 import { Route as AuthenticatedSettingsBlocksRouteImport } from './routes/_authenticated/settings.blocks'
+import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings.account'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedProfileUserIdRouteImport } from './routes/_authenticated/profile.$userId'
 import { Route as AuthenticatedMessagesMatchIdRouteImport } from './routes/_authenticated/messages.$matchId'
@@ -232,10 +234,22 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedSettingsPrivacyRoute =
+  AuthenticatedSettingsPrivacyRouteImport.update({
+    id: '/privacy',
+    path: '/privacy',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSettingsBlocksRoute =
   AuthenticatedSettingsBlocksRouteImport.update({
     id: '/blocks',
     path: '/blocks',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsAccountRoute =
+  AuthenticatedSettingsAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
 const AuthenticatedProfileEditRoute =
@@ -374,7 +388,9 @@ export interface FileRoutesByFullPath {
   '/messages/$matchId': typeof AuthenticatedMessagesMatchIdRoute
   '/profile/$userId': typeof AuthenticatedProfileUserIdRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/blocks': typeof AuthenticatedSettingsBlocksRoute
+  '/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -424,7 +440,9 @@ export interface FileRoutesByTo {
   '/messages/$matchId': typeof AuthenticatedMessagesMatchIdRoute
   '/profile/$userId': typeof AuthenticatedProfileUserIdRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/blocks': typeof AuthenticatedSettingsBlocksRoute
+  '/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -477,7 +495,9 @@ export interface FileRoutesById {
   '/_authenticated/messages/$matchId': typeof AuthenticatedMessagesMatchIdRoute
   '/_authenticated/profile/$userId': typeof AuthenticatedProfileUserIdRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/blocks': typeof AuthenticatedSettingsBlocksRoute
+  '/_authenticated/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -530,7 +550,9 @@ export interface FileRouteTypes {
     | '/messages/$matchId'
     | '/profile/$userId'
     | '/profile/edit'
+    | '/settings/account'
     | '/settings/blocks'
+    | '/settings/privacy'
     | '/admin/'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -580,7 +602,9 @@ export interface FileRouteTypes {
     | '/messages/$matchId'
     | '/profile/$userId'
     | '/profile/edit'
+    | '/settings/account'
     | '/settings/blocks'
+    | '/settings/privacy'
     | '/admin'
     | '/api/public/payments/webhook'
   id:
@@ -632,7 +656,9 @@ export interface FileRouteTypes {
     | '/_authenticated/messages/$matchId'
     | '/_authenticated/profile/$userId'
     | '/_authenticated/profile/edit'
+    | '/_authenticated/settings/account'
     | '/_authenticated/settings/blocks'
+    | '/_authenticated/settings/privacy'
     | '/_authenticated/admin/'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
@@ -901,11 +927,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/settings/privacy': {
+      id: '/_authenticated/settings/privacy'
+      path: '/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof AuthenticatedSettingsPrivacyRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
     '/_authenticated/settings/blocks': {
       id: '/_authenticated/settings/blocks'
       path: '/blocks'
       fullPath: '/settings/blocks'
       preLoaderRoute: typeof AuthenticatedSettingsBlocksRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/account': {
+      id: '/_authenticated/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
     '/_authenticated/profile/edit': {
@@ -1076,11 +1116,15 @@ const AuthenticatedProfileRouteWithChildren =
   AuthenticatedProfileRoute._addFileChildren(AuthenticatedProfileRouteChildren)
 
 interface AuthenticatedSettingsRouteChildren {
+  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsBlocksRoute: typeof AuthenticatedSettingsBlocksRoute
+  AuthenticatedSettingsPrivacyRoute: typeof AuthenticatedSettingsPrivacyRoute
 }
 
 const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
+  AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
   AuthenticatedSettingsBlocksRoute: AuthenticatedSettingsBlocksRoute,
+  AuthenticatedSettingsPrivacyRoute: AuthenticatedSettingsPrivacyRoute,
 }
 
 const AuthenticatedSettingsRouteWithChildren =

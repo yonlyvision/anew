@@ -61,7 +61,7 @@ function Dashboard() {
         Take your time. Be honest. Look at people the way you would want to be looked at.
       </p>
 
-      <div className="mt-12 grid gap-6 md:grid-cols-3">
+      <div className="mt-12 grid gap-5 md:grid-cols-3">
         <Card
           title="Profile"
           value={`${completion}% complete`}
@@ -69,18 +69,25 @@ function Dashboard() {
             to: completion >= 80 ? "/profile" : "/onboarding",
             label: completion >= 80 ? "View profile" : "Continue setup",
           }}
+          accent="coral"
         />
         <Card
           title="Verification"
           value={profile?.email_verified ? "Email verified" : "Verify email"}
           link={{ to: "/verification", label: "Verification" }}
+          accent="teal"
         />
-        <Card title="Messages" value="Inbox" link={{ to: "/messages", label: "Open messages" }} />
+        <Card
+          title="Messages"
+          value="Your inbox"
+          link={{ to: "/messages", label: "Open messages" }}
+          accent="ink"
+        />
       </div>
 
-      <div className="mt-16 border-t border-ink/10 pt-10">
+      <div className="mt-16 rounded-[1.5rem] border border-ink/10 bg-paper/80 p-8 shadow-[0_20px_50px_-35px_rgba(32,23,20,0.3)]">
         <h2 className="font-serif text-2xl">Where to go next</h2>
-        <p className="mt-4 max-w-xl text-sm text-ink/60 leading-relaxed">
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink/60">
           Browse members who share your values, send likes, and start conversations when you match.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
@@ -98,16 +105,30 @@ function Card({
   title,
   value,
   link,
+  accent = "coral",
 }: {
   title: string;
   value: string;
   link: { to: string; label: string };
+  accent?: "coral" | "teal" | "ink";
 }) {
+  const ring =
+    accent === "teal"
+      ? "ring-teal/15 hover:ring-teal/30"
+      : accent === "ink"
+        ? "ring-ink/10 hover:ring-ink/20"
+        : "ring-accent/15 hover:ring-accent/30";
+
   return (
-    <div className="border border-ink/10 p-6 space-y-4">
-      <p className="text-[10px] uppercase tracking-[0.25em] text-ink/50">{title}</p>
-      <p className="font-serif text-3xl">{value}</p>
-      <Link to={link.to} className="text-[11px] uppercase tracking-[0.25em] text-accent hover:text-ink">
+    <div
+      className={`rounded-2xl border border-ink/10 bg-paper p-6 shadow-sm ring-2 ${ring} transition-all hover:-translate-y-1 hover:shadow-md`}
+    >
+      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink/45">{title}</p>
+      <p className="mt-3 font-serif text-3xl leading-tight">{value}</p>
+      <Link
+        to={link.to}
+        className="mt-5 inline-flex rounded-full bg-ink/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-accent transition-colors hover:bg-accent hover:text-paper"
+      >
         {link.label} →
       </Link>
     </div>
@@ -118,7 +139,7 @@ function QuickLink({ to, children }: { to: string; children: React.ReactNode }) 
   return (
     <Link
       to={to}
-      className="rounded-full border border-ink/10 px-5 py-2.5 text-sm font-medium text-ink/70 hover:border-accent/30 hover:text-ink transition-colors"
+      className="rounded-full border-2 border-ink/12 bg-paper px-6 py-2.5 text-sm font-semibold text-ink/75 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/35 hover:text-ink hover:shadow-md"
     >
       {children}
     </Link>

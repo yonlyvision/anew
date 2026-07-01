@@ -12,11 +12,6 @@ export const Route = createFileRoute("/terms")({
     <SiteLayout>
       <PageHero eyebrow="Legal" title="Terms & Conditions" intro="Last updated June 3, 2026" />
       <Prose>
-        <p className="text-sm text-ink/50">
-          This is a working template. Have it reviewed by a lawyer in your jurisdiction before
-          launch.
-        </p>
-
         <h2>1. Who we are</h2>
         <p>
           Anew (the &quot;Service&quot;), hosted at connections.inm8tebook.net, is operated by

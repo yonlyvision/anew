@@ -16,11 +16,13 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-paper text-ink font-sans selection:bg-accent/25">
-      <header className="sticky top-0 z-40 border-b border-ink/5 bg-paper/80 backdrop-blur-md">
+    <div className="min-h-screen bg-paper text-ink font-sans selection:bg-accent/25 bg-[radial-gradient(circle_at_top_left,_rgba(229,98,84,0.06),_transparent_35%),linear-gradient(180deg,_rgba(255,255,255,0.5),_rgba(255,247,241,1))]">
+      <header className="sticky top-0 z-40 border-b border-ink/8 bg-paper/85 shadow-[0_8px_30px_-20px_rgba(32,23,20,0.2)] backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
-          <Link to="/" className="group flex items-center gap-2 font-serif text-2xl font-medium tracking-tight">
-            <span className="inline-block h-2 w-2 rounded-full bg-accent transition-transform group-hover:scale-125" />
+          <Link to="/" className="group flex items-center gap-2.5 font-serif text-2xl font-medium tracking-tight">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-ink text-xs font-bold text-paper shadow-md transition-transform group-hover:scale-105">
+              A
+            </span>
             Anew
           </Link>
           <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-ink/55">
@@ -28,8 +30,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <Link
                 key={l.to}
                 to={l.to}
-                className="rounded-full px-3.5 py-2 transition-colors hover:bg-ink/5 hover:text-ink"
-                activeProps={{ className: "rounded-full px-3.5 py-2 bg-ink/5 text-ink" }}
+                className="rounded-full px-3.5 py-2 transition-all hover:border-ink/10 hover:bg-paper hover:text-ink hover:shadow-sm border border-transparent"
+                activeProps={{ className: "rounded-full px-3.5 py-2 bg-paper text-ink border border-ink/12 shadow-sm" }}
               >
                 {l.label}
               </Link>
@@ -44,7 +46,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             </Link>
             <Link
               to="/apply"
-              className="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper shadow-sm transition-all hover:bg-accent hover:shadow-md"
+              className="rounded-full bg-gradient-to-r from-ink to-[#3a2c25] px-5 py-2.5 text-sm font-semibold text-paper shadow-[0_10px_24px_-14px_rgba(32,23,20,0.55)] transition-all hover:-translate-y-0.5 hover:from-accent hover:to-[#ef886f] hover:shadow-md"
             >
               Apply
             </Link>

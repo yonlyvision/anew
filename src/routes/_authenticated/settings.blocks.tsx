@@ -32,8 +32,8 @@ function BlocksPage() {
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-16 md:py-24">
-      <Link to="/settings" className="text-[11px] uppercase tracking-[0.25em] text-ink/60 hover:text-ink">
-        ← Back to settings
+      <Link to="/settings/privacy" className="text-[11px] uppercase tracking-[0.25em] text-ink/60 hover:text-ink">
+        ← Back to privacy & security
       </Link>
       <h1 className="mt-6 font-serif text-4xl leading-tight">Blocked members</h1>
       <p className="mt-3 text-sm text-ink/60">People you've blocked can't see your profile or contact you.</p>

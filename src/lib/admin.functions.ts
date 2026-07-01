@@ -92,6 +92,47 @@ export const reviewApplication = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const inviteFoundingMember = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        email: z.string().email().max(320),
+        firstName: z.string().max(120).optional(),
+      })
+      .parse(input)
+  )
+  .handler(async ({ data, context }) => {
+    await assertStaff(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.trim().toLowerCase();
+    const firstName = data.firstName?.trim() || "Founding member";
+    const now = new Date().toISOString();
+
+    const { data: row, error } = await supabaseAdmin
+      .from("applications")
+      .upsert(
+        {
+          email,
+          first_name: firstName,
+          status: "approved",
+          reviewed_at: now,
+          reviewed_by: context.userId,
+        },
+        { onConflict: "email" }
+      )
+      .select("id")
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    await logAdminAction(context.userId, "invite_founding_member", "application", row.id, {
+      email,
+    });
+
+    return { ok: true, email, firstName };
+  });
+
 /* ------------ verifications ------------ */
 
 export const listPendingVerifications = createServerFn({ method: "GET" })

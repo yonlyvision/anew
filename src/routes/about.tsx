@@ -23,11 +23,7 @@ export const Route = createFileRoute("/about")({
 function About() {
   return (
     <SiteLayout>
-      <PageHero
-        eyebrow="Our story"
-        title={<>For people the apps weren't built for.</>}
-        intro="If you've rebuilt your life after something hard — time away, recovery, a divorce, a season you'd rather not lead with — you already know how fast people decide who you are. Anew is for you, and for the people open to knowing you before they judge you."
-      />
+      <PageHero eyebrow="Our story" title="About Anew" />
       <Prose>
         <h2>Who we're for</h2>
         <p>
@@ -59,41 +55,20 @@ function About() {
         </ul>
 
         <h2>A note from the founder</h2>
-        <div className="rounded-2xl border border-dashed border-accent/25 bg-accent/[0.04] px-5 py-4 not-prose">
-          <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-            Client note — before launch
+        <div>
+          <p>
+            I built Anew after watching someone I love get reduced to the worst chapter of their
+            life on every app they tried. They were honest about it — and honesty kept ending the
+            conversation. But they were one of the most loyal, accountable, genuinely changed
+            people I&apos;ve ever known. The apps couldn&apos;t see that. I wanted to build a place
+            that could.
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-ink/55">
-            Founder name and photo will be supplied by the client. Once we have them, we&apos;ll add
-            the portrait and signature here. The letter below stays as-is until then.
+          <p>
+            Anew is small on purpose, and new on purpose. I read the applications. I answer the
+            contact form. If you join in these early days, you&apos;re not a user — you&apos;re one
+            of the people helping decide what this community feels like. Thank you for being here.
           </p>
-        </div>
-        <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-start">
-          <div
-            className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl border border-dashed border-ink/15 bg-ink/[0.03] text-center text-xs leading-5 text-ink/40"
-            aria-hidden="true"
-          >
-            Founder photo
-            <br />
-            (coming)
-          </div>
-          <div>
-            <p>
-              I built Anew after watching someone I love get reduced to the worst chapter of their
-              life on every app they tried. They were honest about it — and honesty kept ending the
-              conversation. But they were one of the most loyal, accountable, genuinely changed
-              people I&apos;ve ever known. The apps couldn&apos;t see that. I wanted to build a place
-              that could.
-            </p>
-            <p>
-              Anew is small on purpose, and new on purpose. I read the applications. I answer the
-              contact form. If you join in these early days, you&apos;re not a user — you&apos;re one
-              of the people helping decide what this community feels like. Thank you for being here.
-            </p>
-            <p className="text-sm text-ink/45">
-              — [Founder name from client], Anew
-            </p>
-          </div>
+          <p className="text-sm text-ink/45">— Anew</p>
         </div>
         <p className="text-sm text-ink/45">
           Anew is a dating community from the INM8TE Book family, hosted at{" "}

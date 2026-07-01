@@ -15,11 +15,6 @@ export const Route = createFileRoute("/privacy")({
     <SiteLayout>
       <PageHero eyebrow="Legal" title="Privacy Policy" intro="Last updated June 3, 2026" />
       <Prose>
-        <p className="text-sm text-ink/50">
-          This is a working template. Have it reviewed by a privacy lawyer in your jurisdiction
-          before launch.
-        </p>
-
         <h2>Our promise</h2>
         <p>
           Your privacy is the foundation of trust on Anew. We collect the minimum information

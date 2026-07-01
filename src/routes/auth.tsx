@@ -41,6 +41,7 @@ function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [agreeDisclaimer, setAgreeDisclaimer] = useState(false);
   const verifyCaptcha = useServerFn(verifyAuthCaptcha);
   const checkApproval = useServerFn(checkApplicationApproval);
 
@@ -75,6 +76,9 @@ function AuthPage() {
       await verifyCaptcha({ data: { turnstileToken } });
 
       if (mode === "signup") {
+        if (!agreeDisclaimer) {
+          throw new Error("Please confirm you've read and agree to the Website Disclaimer.");
+        }
         const approval = await checkApproval({
           data: { email, turnstileToken },
         });
@@ -251,6 +255,24 @@ function AuthPage() {
                 {error && <p className="text-sm text-destructive">{error}</p>}
                 {info && <p className="text-sm text-ink/60">{info}</p>}
 
+                {applying && (
+                  <label className="flex items-start gap-3 text-sm leading-6 text-ink/65">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 rounded border-ink/30 accent-accent"
+                      checked={agreeDisclaimer}
+                      onChange={(e) => setAgreeDisclaimer(e.target.checked)}
+                    />
+                    <span>
+                      I&apos;ve read and agree to the{" "}
+                      <Link to="/disclaimer" className="text-accent underline-offset-4 hover:underline">
+                        Website Disclaimer
+                      </Link>
+                      , including the safety notice that we do not run background checks.
+                    </span>
+                  </label>
+                )}
+
                 <div className="rounded-[1.4rem] border border-ink/8 bg-paper/75 px-4 py-4">
                   <p className="text-xs leading-6 text-ink/56">
                     CAPTCHA protects the application flow from spam and keeps the
@@ -264,7 +286,11 @@ function AuthPage() {
 
                 <button
                   type="submit"
-                  disabled={loading || !turnstileToken}
+                  disabled={
+                    loading ||
+                    !turnstileToken ||
+                    (applying && !agreeDisclaimer)
+                  }
                   className="w-full rounded-full bg-gradient-to-r from-ink to-[#3a2c25] py-3 text-sm font-medium text-paper shadow-sm transition-all hover:from-accent hover:to-[#ef886f] disabled:opacity-60"
                 >
                   {primaryLabel}

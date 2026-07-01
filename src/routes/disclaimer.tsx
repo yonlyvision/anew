@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHero, Prose, SiteLayout } from "@/components/site/SiteLayout";
 
+const EFFECTIVE_DATE = "June 29, 2026";
+
 export const Route = createFileRoute("/disclaimer")({
   head: () => ({
     meta: [
@@ -23,18 +25,12 @@ function Disclaimer() {
         title="Website Disclaimer and Terms of Use Notice"
         intro={
           <>
-            Inm8teBook.net / Anew Platform · Effective June 29, 2026 · Operated by Leucherin
-            Fletcher Blackman, Sole Proprietor · Province of Ontario, Canada
+            Inm8teBook.net / Anew Platform · Operated by Leucherin Fletcher Blackman, Sole
+            Proprietor · Province of Ontario, Canada · Effective {EFFECTIVE_DATE}
           </>
         }
       />
       <Prose>
-        <p className="text-sm text-ink/50">
-          This disclaimer was drafted for the INM8TE Book / Anew platform. It is recommended that
-          it be reviewed by a qualified Ontario lawyer before publication, particularly given the
-          sensitive nature of the platform&apos;s user base.
-        </p>
-
         <p>
           By accessing, browsing, registering for, or using any part of this website or platform,
           you acknowledge that you have read, understood, and agree to be bound by this Disclaimer
@@ -44,10 +40,10 @@ function Disclaimer() {
         <h2>1. About this platform</h2>
         <p>
           Inm8teBook.net (also operating under the brand name &quot;Anew&quot;, including at{" "}
-          connections.inm8tebook.net) is an online social networking and dating platform designed
-          to facilitate connections, communication, and community among adults. The platform is
-          operated by Leucherin Fletcher Blackman, a sole proprietor registered in the Province of
-          Ontario, Canada.
+          <a href="https://connections.inm8tebook.net">connections.inm8tebook.net</a>) is an online
+          social networking and dating platform designed to facilitate connections, communication,
+          and community among adults. The platform is operated by Leucherin Fletcher Blackman, a sole
+          proprietor registered in the Province of Ontario, Canada.
         </p>
         <p>
           The platform is intended for adults who are rebuilding their lives following significant
@@ -133,20 +129,22 @@ function Disclaimer() {
         </ul>
 
         <h2>5. Safety recommendations</h2>
-        <p>Given the nature of this platform, users are strongly encouraged to follow these safety practices:</p>
+        <p>
+          Given the nature of this platform, users are strongly encouraged to follow these safety
+          practices:
+        </p>
         <ul>
           <li>
-            Use a third-party background check service before agreeing to meet any person in
-            person;
+            Use a third-party background check service before agreeing to meet any person in person;
           </li>
           <li>Conduct initial meetings in well-populated public places only;</li>
           <li>
-            Inform a trusted friend, family member, or contact of all meeting arrangements,
-            including location and timing;
+            Inform a trusted friend, family member, or contact of all meeting arrangements, including
+            location and timing;
           </li>
           <li>
-            Do not share home addresses, financial information, workplace details, or other
-            sensitive personal information with users you have not thoroughly vetted;
+            Do not share home addresses, financial information, workplace details, or other sensitive
+            personal information with users you have not thoroughly vetted;
           </li>
           <li>Be aware that some users may misrepresent their identity, history, or intentions;</li>
           <li>
@@ -216,26 +214,26 @@ function Disclaimer() {
         </p>
         <p>
           This platform operates in compliance with the Personal Information Protection and
-          Electronic Documents Act (PIPEDA) and applicable Ontario privacy legislation. Users have the
-          right to access, correct, and request deletion of their personal information. To exercise
-          these rights, contact:{" "}
+          Electronic Documents Act (PIPEDA) and applicable Ontario privacy legislation. Users have
+          the right to access, correct, and request deletion of their personal information. To
+          exercise these rights, contact:{" "}
           <a href="mailto:support@inm8tebook.net">support@inm8tebook.net</a>.
         </p>
 
         <h2>9. No professional advice</h2>
         <p>
           No content on this platform — including articles, stories, wellness information,
-          relationship guidance, or educational materials — constitutes legal, medical, psychological,
-          financial, or any other form of professional advice. Users should consult qualified
-          licensed professionals for guidance on specific personal matters.
+          relationship guidance, or educational materials — constitutes legal, medical,
+          psychological, financial, or any other form of professional advice. Users should consult
+          qualified licensed professionals for guidance on specific personal matters.
         </p>
 
         <h2>10. Third-party links and services</h2>
         <p>
           This platform may contain links to third-party websites, applications, or services.
-          Inm8teBook.net is not responsible for the content, privacy practices, security, or accuracy
-          of any third-party site. Links do not constitute endorsement. Users engage with third-party
-          services entirely at their own risk.
+          Inm8teBook.net is not responsible for the content, privacy practices, security, or
+          accuracy of any third-party site. Links do not constitute endorsement. Users engage with
+          third-party services entirely at their own risk.
         </p>
 
         <h2>11. Modifications to this disclaimer</h2>
@@ -270,7 +268,12 @@ function Disclaimer() {
             </a>
           </li>
         </ul>
-        <p className="text-sm text-ink/50">Last reviewed: June 29, 2026</p>
+
+        <p className="text-sm text-ink/45 border-t border-ink/10 pt-6 mt-10">
+          Effective {EFFECTIVE_DATE}. Related documents:{" "}
+          <Link to="/terms">Terms of Service</Link>, <Link to="/privacy">Privacy Policy</Link>,{" "}
+          <Link to="/cookies">Cookie Policy</Link>.
+        </p>
       </Prose>
     </SiteLayout>
   );
